@@ -29,7 +29,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public TracksRepo provideTracksRepo() {
-        return new TracksRepo();
+    public TracksRepo provideTracksRepo(Context context) {
+        return new TracksRepo(context);
     }
 }

@@ -5,21 +5,17 @@ package mmss.musicco.dataobjects;
  */
 
 public class Track {
+    public int id;
     public String name;
-    public String actor;
+    public String artist;
     public String album;
     public Integer length;
     public Integer size;
+    public String url;
+    public String localUrl;
+    public boolean isLocal;
 
     public Track() {
 
-    }
-
-    public Track(String name, String actor, String album, Integer length, Integer size) {
-        this.name = name;
-        this.actor = actor;
-        this.album = album;
-        this.length = length;
-        this.size = size;
     }
 }

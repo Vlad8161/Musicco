@@ -6,16 +6,16 @@ package mmss.musicco.dataobjects;
 
 public class Album {
     public String name;
-    public String actor;
-    public String tracksCount;
+    public String artist;
+    public int tracksCount;
 
     public Album() {
 
     }
 
-    public Album(String name, String actor, String tracksCount) {
+    public Album(String name, String actor, int tracksCount) {
         this.name = name;
-        this.actor = actor;
+        this.artist = actor;
         this.tracksCount = tracksCount;
     }
 }

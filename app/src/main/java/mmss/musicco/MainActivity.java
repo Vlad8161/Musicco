@@ -9,16 +9,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import mmss.musicco.dataobjects.Album;
+import mmss.musicco.dataobjects.Artist;
+import mmss.musicco.dataobjects.Track;
 import mmss.musicco.fragments.ActorsFragment;
 import mmss.musicco.fragments.AlbumsFragment;
 import mmss.musicco.fragments.TracksFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "MainActivity";
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -47,6 +53,31 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_main_container, f).commit();
         navigationView.setCheckedItem(R.id.nav_tracks);
+
+        Log.d(TAG, "--- getAllTracks ---");
+        for (Track i : DatabaseHelper.getAllTracks(this)) {
+            Log.d(TAG, i.name + ", " + i.album + ", " + i.artist);
+        }
+
+        Log.d(TAG, "--- getArtistTracks ---");
+        for (Track i : DatabaseHelper.getArtistTracks(this, "artist1")) {
+            Log.d(TAG, i.name + ", " + i.album + ", " + i.artist);
+        }
+
+        Log.d(TAG, "--- getAlbumTracks ---");
+        for (Track i : DatabaseHelper.getAlbumTracks(this, "artist1", "album1")) {
+            Log.d(TAG, i.name + ", " + i.album + ", " + i.artist);
+        }
+
+        Log.d(TAG, "--- getAllArtists ---");
+        for (Artist i : DatabaseHelper.getAllArtist(this)) {
+            Log.d(TAG, i.name + ", " + i.tracksCount);
+        }
+
+        Log.d(TAG, "--- getAllAlbums ---");
+        for (Album i : DatabaseHelper.getAllAlbums(this, "artist2")) {
+            Log.d(TAG, i.artist + ", " + i.name + ", " + i.tracksCount);
+        }
     }
 
     @Override
