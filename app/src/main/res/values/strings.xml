@@ -5,4 +5,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="tracks_repo_artist_unknown">Неизвестный исполнитель</string>
+    <string name="fragment_tracks_empty_tracks">Треки отсутствуют</string>
+    <string name="fragment_tracks_lv_item_no_name">Без названия</string>
+    <string name="fragment_tracks_lv_item_no_album">Неизвестный альбом</string>
+    <string name="fragment_tracks_lv_item_no_artist">Неизвестный исполнитель</string>
 </resources>

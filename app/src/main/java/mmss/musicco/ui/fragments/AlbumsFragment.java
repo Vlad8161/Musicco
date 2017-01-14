@@ -1,4 +1,4 @@
-package mmss.musicco.fragments;
+package mmss.musicco.ui.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -14,24 +14,24 @@ import mmss.musicco.R;
  * Created by User on 12.10.2016.
  */
 
-public class TracksFragment extends Fragment {
+public class AlbumsFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tracks, null);
+        return inflater.inflate(R.layout.fragment_albums, null);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("TAG", "TracksFragment started");
+        Log.d("TAG", "AlbumsFragment started");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("TAG", "TracksFragment stopped");
+        Log.d("TAG", "AlbumsFragment stopped");
     }
 
 }

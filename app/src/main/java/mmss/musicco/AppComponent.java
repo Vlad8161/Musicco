@@ -3,10 +3,11 @@ package mmss.musicco;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import mmss.musicco.fragments.ActorsFragment;
-import mmss.musicco.fragments.AlbumsFragment;
-import mmss.musicco.fragments.PlayerFragment;
-import mmss.musicco.fragments.TracksFragment;
+import mmss.musicco.ui.activities.MainActivity;
+import mmss.musicco.ui.fragments.ActorsFragment;
+import mmss.musicco.ui.fragments.AlbumsFragment;
+import mmss.musicco.ui.fragments.PlayerFragment;
+import mmss.musicco.ui.fragments.TracksFragment;
 
 /**
  * Created by User on 13.10.2016.

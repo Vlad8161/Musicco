@@ -1,4 +1,4 @@
-package mmss.musicco.fragments;
+package mmss.musicco.ui.fragments;
 
 import android.app.Fragment;
 
