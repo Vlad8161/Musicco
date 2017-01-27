@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
     @Inject
     TracksRepo tracksRepo;
 
-    @BindView(R.id.toolbar)
+    @BindView(R.id.content_main_toolbar)
     Toolbar toolbar;
 
     @BindView(R.id.drawer_layout)

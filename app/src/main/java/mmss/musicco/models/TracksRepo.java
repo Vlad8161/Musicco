@@ -59,7 +59,6 @@ public class TracksRepo {
                 }
             }
 
-            Log.d("LOGI", musicDir.getAbsolutePath());
             for (File f : musicDir.listFiles()) {
                 if (f.isDirectory()) {
                     continue;
