@@ -15,4 +15,14 @@ public class Track {
     public Track() {
 
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Track)) {
+            return false;
+        }
+
+        Track t = (Track) obj;
+        return url != null && t.url != null && t.url.equals(url);
+    }
 }

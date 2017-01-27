@@ -7,14 +7,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import mmss.musicco.App;
 import mmss.musicco.R;
+import mmss.musicco.core.MusiccoPlayer;
 import mmss.musicco.dataobjects.Track;
 import mmss.musicco.ui.adapters.TracksAdapter;
 import rx.Observable;
@@ -26,7 +31,7 @@ import rx.schedulers.Schedulers;
  * Created by User on 12.10.2016.
  */
 
-public class TracksFragment extends Fragment {
+public class TracksFragment extends Fragment implements AdapterView.OnItemClickListener {
     private Observable<List<Track>> observableTracks;
     private Subscription subscription;
     private List<Track> tracks;
@@ -41,6 +46,9 @@ public class TracksFragment extends Fragment {
     @BindView(R.id.fragment_tracks_view_message)
     public TextView viewMessage;
 
+    @Inject
+    public MusiccoPlayer musiccoPlayer;
+
     public static TracksFragment create(Observable<List<Track>> observableTracks) {
         if (observableTracks == null) {
             throw new NullPointerException("Tracks observable can't be null");
@@ -48,6 +56,7 @@ public class TracksFragment extends Fragment {
 
         TracksFragment f = new TracksFragment();
         f.observableTracks = observableTracks;
+        App.getApp().inject(f);
         return f;
     }
 
@@ -58,6 +67,7 @@ public class TracksFragment extends Fragment {
         ButterKnife.bind(this, v);
         adapter = new TracksAdapter(getActivity().getApplicationContext());
         lvTracks.setAdapter(adapter);
+        lvTracks.setOnItemClickListener(this);
         return v;
     }
 
@@ -106,5 +116,18 @@ public class TracksFragment extends Fragment {
                 viewProgress.setVisibility(View.GONE);
             }
         });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Track track = (Track) adapter.getItem(position);
+        Track currentTrack = musiccoPlayer.getCurrentTrack();
+        if (currentTrack == null || !currentTrack.equals(track)) {
+            musiccoPlayer.playTrack(track);
+        } else if (musiccoPlayer.isPlaying()) {
+            musiccoPlayer.pause();
+        } else {
+            musiccoPlayer.resume();
+        }
     }
 }
