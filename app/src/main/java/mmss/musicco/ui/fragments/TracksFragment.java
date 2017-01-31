@@ -34,7 +34,6 @@ import rx.schedulers.Schedulers;
 public class TracksFragment extends Fragment implements AdapterView.OnItemClickListener {
     private Observable<List<Track>> observableTracks;
     private Subscription subscription;
-    private List<Track> tracks;
     private TracksAdapter adapter;
 
     @BindView(R.id.fragment_tracks_view_list)
@@ -124,7 +123,7 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
         Track currentTrack = musiccoPlayer.getCurrentTrack();
         if (currentTrack == null || !currentTrack.equals(track)) {
             musiccoPlayer.playTrack(track);
-        } else if (musiccoPlayer.isPlaying()) {
+        } else if (musiccoPlayer.getState() == MusiccoPlayer.STATE_PLAYING) {
             musiccoPlayer.pause();
         } else {
             musiccoPlayer.resume();
