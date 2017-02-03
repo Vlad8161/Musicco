@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -23,35 +24,30 @@ import mmss.musicco.App;
 import mmss.musicco.R;
 import mmss.musicco.core.MusiccoPlayer;
 import mmss.musicco.dataobjects.Track;
+import mmss.musicco.models.TracksRepo;
 import mmss.musicco.ui.fragments.ActorsFragment;
 import mmss.musicco.ui.fragments.AlbumsFragment;
 import mmss.musicco.ui.fragments.TracksFragment;
-import mmss.musicco.models.TracksRepo;
 import rx.Observable;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MusiccoPlayer.OnTrackChangedListener {
 
     private static final String TAG = "MainActivity";
-    private BottomSheetBehavior bottomSheetBehavior;
-
     @Inject
     TracksRepo tracksRepo;
-
     @Inject
     MusiccoPlayer musiccoPlayer;
-
     @BindView(R.id.content_main_toolbar)
     Toolbar toolbar;
-
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
-
     @BindView(R.id.nav_view)
     NavigationView navigationView;
-
     @BindView(R.id.content_main_bottom_sheet)
     View bottomSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private int peekHeightPixels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +75,15 @@ public class MainActivity extends AppCompatActivity
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        if (musiccoPlayer.getCurrentTrack() == null) {
-            bottomSheetBehavior.setPeekHeight(0);
-        } else {
-            bottomSheetBehavior.setPeekHeight(100);
-        }
-
+        bottomSheet.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            peekHeightPixels = (int) (((double) bottomSheet.getHeight()) * 114 / 160);
+            Log.d("LOGI", "" + peekHeightPixels);
+            if (musiccoPlayer.getCurrentTrack() == null) {
+                bottomSheetBehavior.setPeekHeight(0);
+            } else {
+                bottomSheetBehavior.setPeekHeight(peekHeightPixels);
+            }
+        });
     }
 
     @Override
@@ -130,12 +129,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onTrackChangedListener(Track track) {
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         if (track == null) {
-            bottomSheetBehavior.setPeekHeight(0);
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
-            bottomSheetBehavior.setPeekHeight(100);
+            bottomSheetBehavior.setPeekHeight(peekHeightPixels);
         }
     }
 }
