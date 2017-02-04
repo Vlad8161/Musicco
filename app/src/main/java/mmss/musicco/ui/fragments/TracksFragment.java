@@ -25,7 +25,6 @@ import mmss.musicco.ui.adapters.TracksAdapter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by User on 12.10.2016.
@@ -126,7 +125,7 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
         } else if (musiccoPlayer.getState() == MusiccoPlayer.STATE_PLAYING) {
             musiccoPlayer.pause();
         } else {
-            musiccoPlayer.resume();
+            musiccoPlayer.play();
         }
     }
 }

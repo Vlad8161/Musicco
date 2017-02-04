@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -77,7 +76,6 @@ public class MainActivity extends AppCompatActivity
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheet.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
             peekHeightPixels = (int) (((double) bottomSheet.getHeight()) * 114 / 160);
-            Log.d("LOGI", "" + peekHeightPixels);
             if (musiccoPlayer.getCurrentTrack() == null) {
                 bottomSheetBehavior.setPeekHeight(0);
             } else {

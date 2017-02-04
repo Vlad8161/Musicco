@@ -10,4 +10,7 @@
     <string name="fragment_tracks_lv_item_no_name">Без названия</string>
     <string name="fragment_tracks_lv_item_no_album">Неизвестный альбом</string>
     <string name="fragment_tracks_lv_item_no_artist">Неизвестный исполнитель</string>
+
+    <string name="fragment_player_unknown_track_text">Неизвестная композиция</string>
+    <string name="fragment_player_unknown_artist_text">Неизвестный исполнитель</string>
 </resources>
