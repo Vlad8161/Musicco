@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import mmss.musicco.App;
 import mmss.musicco.R;
 import mmss.musicco.core.MusiccoPlayer;
@@ -142,4 +143,20 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
             btnStop.setEnabled(false);
         }
     }
+
+    @OnClick(R.id.fragment_player_btn_play)
+    public void onClickPlay(View v) {
+        musiccoPlayer.play();
+    }
+
+    @OnClick(R.id.fragment_player_btn_pause)
+    public void onClickPause() {
+        musiccoPlayer.pause();
+    }
+
+    @OnClick(R.id.fragment_player_btn_stop)
+    public void onClickStop() {
+        musiccoPlayer.stop();
+    }
+
 }

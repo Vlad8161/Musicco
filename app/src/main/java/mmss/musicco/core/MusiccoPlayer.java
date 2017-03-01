@@ -107,6 +107,8 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
         } else if (mInternalState == INTERNAL_STATE_STOPPED) {
             mPlayer.prepareAsync();
             setInternalState(INTERNAL_STATE_PREPARING);
+        } else if (mInternalState == INTERNAL_STATE_IDLE) {
+            playTrack(mCurrentTrack);
         }
     }
 
@@ -115,8 +117,9 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
                 mInternalState == INTERNAL_STATE_PAUSED ||
                 mInternalState == INTERNAL_STATE_PREPARED ||
                 mInternalState == INTERNAL_STATE_PLAYBACK_COMPLETED) {
-            mPlayer.stop();
-            setInternalState(INTERNAL_STATE_STOPPED);
+            mPlayer.seekTo(0);
+            mPlayer.reset();
+            setInternalState(INTERNAL_STATE_IDLE);
         }
     }
 
