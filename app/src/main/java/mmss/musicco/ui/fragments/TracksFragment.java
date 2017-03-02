@@ -34,6 +34,7 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
     private Observable<List<Track>> observableTracks;
     private Subscription subscription;
     private TracksAdapter adapter;
+    private List<Track> mTracks = null;
 
     @BindView(R.id.fragment_tracks_view_list)
     public ListView lvTracks;
@@ -102,6 +103,7 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
         subscription = observableTracks
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((tracks) -> {
+            mTracks = tracks;
             if (tracks == null || tracks.isEmpty()) {
                 viewMessage.setText(R.string.fragment_tracks_empty_tracks);
                 lvTracks.setVisibility(View.GONE);
@@ -121,7 +123,8 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
         Track track = (Track) adapter.getItem(position);
         Track currentTrack = musiccoPlayer.getCurrentTrack();
         if (currentTrack == null || !currentTrack.equals(track)) {
-            musiccoPlayer.playTrack(track);
+            musiccoPlayer.setTracks(mTracks);
+            musiccoPlayer.playTrack(position);
         } else if (musiccoPlayer.getState() == MusiccoPlayer.STATE_PLAYING) {
             musiccoPlayer.pause();
         } else {

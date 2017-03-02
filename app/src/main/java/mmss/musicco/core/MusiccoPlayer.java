@@ -43,6 +43,8 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
     private Context mContext;
     private MediaPlayer mPlayer;
     private Track mCurrentTrack;
+    private Integer mCurrentTrackIndex;
+    private List<Track> mCurrentTrackList;
     private int mInternalState = INTERNAL_STATE_IDLE;
     private Handler mBackgroundHandler;
     private Handler mUiHandler;
@@ -71,25 +73,70 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
         mUiHandler = new Handler(Looper.getMainLooper());
     }
 
-    public void playTrack(Track track) {
+    public void playTrack(Integer trackIndex) {
         mPlayer.reset();
         setInternalState(INTERNAL_STATE_IDLE);
 
-        if (track == null || track.url == null) {
-            setCurrentTrack(null);
+        setCurrentTrack(trackIndex);
+        if (mCurrentTrack == null) {
             return;
         }
 
-        setCurrentTrack(track);
-
         try {
-            mPlayer.setDataSource(track.url);
+            mPlayer.setDataSource(mCurrentTrack.url);
             setInternalState(INTERNAL_STATE_INITIALIZED);
             mPlayer.prepareAsync();
             setInternalState(INTERNAL_STATE_PREPARING);
         } catch (IOException e) {
             e.printStackTrace();
             setCurrentTrack(null);
+        }
+    }
+
+    public void setTracks(List<Track> tracks) {
+        mPlayer.reset();
+        setInternalState(INTERNAL_STATE_IDLE);
+
+        mCurrentTrackList = tracks;
+
+        if (mCurrentTrackList == null) {
+            setCurrentTrack(null);
+        } else {
+            setCurrentTrack(0);
+        }
+    }
+
+    public List<Track> getTracks() {
+        if (mCurrentTrackList != null) {
+            return new ArrayList<>(mCurrentTrackList);
+        } else {
+            return null;
+        }
+    }
+
+    public int getTracksCount() {
+        if (mCurrentTrackList != null) {
+            return mCurrentTrackList.size();
+        } else {
+            return 0;
+        }
+    }
+
+    public Integer getCurrentTrackIndex() {
+        return mCurrentTrackIndex;
+    }
+
+    public void nextTrack() {
+        if (mCurrentTrackIndex != null) {
+            setCurrentTrack(mCurrentTrackIndex + 1);
+            playTrack(mCurrentTrackIndex);
+        }
+    }
+
+    public void prevTrack() {
+        if (mCurrentTrackIndex != null) {
+            setCurrentTrack(mCurrentTrackIndex - 1);
+            playTrack(mCurrentTrackIndex);
         }
     }
 
@@ -108,7 +155,7 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
             mPlayer.prepareAsync();
             setInternalState(INTERNAL_STATE_PREPARING);
         } else if (mInternalState == INTERNAL_STATE_IDLE) {
-            playTrack(mCurrentTrack);
+            playTrack(mCurrentTrackIndex);
         } else if (mInternalState == INTERNAL_STATE_PLAYBACK_COMPLETED) {
             mPlayer.start();
             setInternalState(INTERNAL_STATE_STARTED);
@@ -204,7 +251,19 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
         return mCurrentTrack;
     }
 
-    private void setCurrentTrack(Track track) {
+    private void setCurrentTrack(Integer i) {
+        Track track;
+        if (mCurrentTrackList != null && i != null && i >= 0 && i < mCurrentTrackList.size()) {
+            mCurrentTrackIndex = i;
+            track = mCurrentTrackList.get(i);
+            if (track.url == null) {
+                track = null;
+            }
+        } else {
+            mCurrentTrackIndex = null;
+            track = null;
+        }
+
         if (track != mCurrentTrack) {
             mCurrentTrack = track;
             for (OnTrackChangedListener listener : mTrackChangedListeners) {
@@ -287,6 +346,7 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
     public void onCompletion(MediaPlayer mp) {
         setInternalState(INTERNAL_STATE_PLAYBACK_COMPLETED);
         notifyPosChanged();
+        nextTrack();
     }
 
     @Override
@@ -294,7 +354,7 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
         setInternalState(INTERNAL_STATE_ERROR);
         mPlayer.reset();
         setInternalState(INTERNAL_STATE_IDLE);
-        setCurrentTrack(null);
+        nextTrack();
         return true;
     }
 

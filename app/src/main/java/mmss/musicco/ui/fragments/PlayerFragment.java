@@ -140,9 +140,16 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
         if (track != null && track.artist != null) {
             artistName = track.artist;
         } else {
-            artistName = getResources().getString(R.string.fragment_player_unknown_track_text);
+            artistName = getResources().getString(R.string.fragment_player_unknown_artist_text);
         }
         tvTrackName.setText(artistName + " - " + trackName);
+
+        Integer trackIndex = musiccoPlayer.getCurrentTrackIndex();
+        int tracksCount = musiccoPlayer.getTracksCount();
+        if (trackIndex != null) {
+            btnNext.setEnabled(trackIndex < tracksCount - 1);
+            btnPrev.setEnabled(trackIndex > 0);
+        }
     }
 
     @Override
@@ -186,5 +193,23 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
     @OnClick(R.id.fragment_player_btn_stop)
     public void onClickStop() {
         musiccoPlayer.stop();
+    }
+
+    @OnClick(R.id.fragment_player_btn_next)
+    public void onClickNext() {
+        Integer trackIndex = musiccoPlayer.getCurrentTrackIndex();
+        int tracksCount = musiccoPlayer.getTracksCount();
+        if (trackIndex != null && trackIndex >= 0 && trackIndex < tracksCount - 1) {
+            musiccoPlayer.nextTrack();
+        }
+    }
+
+    @OnClick(R.id.fragment_player_btn_prev)
+    public void onClickPrev() {
+        Integer trackIndex = musiccoPlayer.getCurrentTrackIndex();
+        int tracksCount = musiccoPlayer.getTracksCount();
+        if (trackIndex != null && trackIndex > 0 && trackIndex < tracksCount) {
+            musiccoPlayer.prevTrack();
+        }
     }
 }

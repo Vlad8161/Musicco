@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTrackChangedListener(Track track) {
         if (track == null) {
+            bottomSheetBehavior.setPeekHeight(0);
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
             bottomSheetBehavior.setPeekHeight(peekHeightPixels);
