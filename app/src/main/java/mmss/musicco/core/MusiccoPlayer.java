@@ -109,6 +109,9 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
             setInternalState(INTERNAL_STATE_PREPARING);
         } else if (mInternalState == INTERNAL_STATE_IDLE) {
             playTrack(mCurrentTrack);
+        } else if (mInternalState == INTERNAL_STATE_PLAYBACK_COMPLETED) {
+            mPlayer.start();
+            setInternalState(INTERNAL_STATE_STARTED);
         }
     }
 
@@ -120,6 +123,15 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
             mPlayer.seekTo(0);
             mPlayer.reset();
             setInternalState(INTERNAL_STATE_IDLE);
+        }
+    }
+
+    public void seek(int pos) {
+        if (mInternalState == INTERNAL_STATE_PAUSED ||
+                mInternalState == INTERNAL_STATE_STARTED) {
+            if (pos >= 0 && pos < getDuration()) {
+                mPlayer.seekTo(pos);
+            }
         }
     }
 
@@ -274,6 +286,7 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
     @Override
     public void onCompletion(MediaPlayer mp) {
         setInternalState(INTERNAL_STATE_PLAYBACK_COMPLETED);
+        notifyPosChanged();
     }
 
     @Override
@@ -294,7 +307,7 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
 
     @Override
     public void onSeekComplete(MediaPlayer mp) {
-        Log.d(TAG, "onSeekComplete");
+
     }
 
     public interface OnStateChangedListener {

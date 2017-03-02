@@ -49,6 +49,26 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
     @BindView(R.id.fragment_player_tv_track_name)
     TextView tvTrackName;
 
+    private SeekBar.OnSeekBarChangeListener seekBarListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            userMovingSeekBar = true;
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            musiccoPlayer.seek(seekBar.getProgress());
+            userMovingSeekBar = false;
+        }
+    };
+
+    private boolean userMovingSeekBar = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,16 +78,20 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
         musiccoPlayer.addOnTrackChangedListener(this);
         musiccoPlayer.addOnPosChangedListener(this);
         musiccoPlayer.addOnStateChangedListener(this);
+        seekBar.setOnSeekBarChangeListener(seekBarListener);
 
         if (musiccoPlayer.getState() == MusiccoPlayer.STATE_PLAYING) {
+            seekBar.setEnabled(true);
             btnPlay.setVisibility(View.INVISIBLE);
             btnPause.setVisibility(View.VISIBLE);
             btnStop.setEnabled(true);
         } else if (musiccoPlayer.getState() == MusiccoPlayer.STATE_PAUSED) {
+            seekBar.setEnabled(true);
             btnPlay.setVisibility(View.VISIBLE);
             btnPause.setVisibility(View.INVISIBLE);
             btnStop.setEnabled(true);
         } else if (musiccoPlayer.getState() == MusiccoPlayer.STATE_STOPPED) {
+            seekBar.setEnabled(false);
             btnPlay.setVisibility(View.VISIBLE);
             btnPause.setVisibility(View.INVISIBLE);
             btnStop.setEnabled(false);
@@ -123,21 +147,26 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
 
     @Override
     public void onPosChangedListener(int pos, int dur) {
-        seekBar.setMax(dur);
-        seekBar.setProgress(pos);
+        if (!userMovingSeekBar) {
+            seekBar.setMax(dur);
+            seekBar.setProgress(pos);
+        }
     }
 
     @Override
     public void onStateChangedListener(int state) {
         if (state == MusiccoPlayer.STATE_PLAYING) {
+            seekBar.setEnabled(true);
             btnPlay.setVisibility(View.INVISIBLE);
             btnPause.setVisibility(View.VISIBLE);
             btnStop.setEnabled(true);
         } else if (state == MusiccoPlayer.STATE_PAUSED) {
+            seekBar.setEnabled(true);
             btnPlay.setVisibility(View.VISIBLE);
             btnPause.setVisibility(View.INVISIBLE);
             btnStop.setEnabled(true);
         } else if (state == MusiccoPlayer.STATE_STOPPED) {
+            seekBar.setEnabled(false);
             btnPlay.setVisibility(View.VISIBLE);
             btnPause.setVisibility(View.INVISIBLE);
             btnStop.setEnabled(false);
@@ -158,5 +187,4 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
     public void onClickStop() {
         musiccoPlayer.stop();
     }
-
 }
