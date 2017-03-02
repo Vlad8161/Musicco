@@ -105,7 +105,7 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
                 .subscribe((tracks) -> {
             mTracks = tracks;
             if (tracks == null || tracks.isEmpty()) {
-                viewMessage.setText(R.string.fragment_tracks_empty_tracks);
+                viewMessage.setText(R.string.tracks_repo_empty_tracks);
                 lvTracks.setVisibility(View.GONE);
                 viewMessage.setVisibility(View.VISIBLE);
                 viewProgress.setVisibility(View.GONE);

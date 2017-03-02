@@ -24,13 +24,13 @@ import mmss.musicco.R;
 import mmss.musicco.core.MusiccoPlayer;
 import mmss.musicco.dataobjects.Track;
 import mmss.musicco.models.TracksRepo;
-import mmss.musicco.ui.fragments.ActorsFragment;
+import mmss.musicco.ui.fragments.ArtistsFragment;
 import mmss.musicco.ui.fragments.AlbumsFragment;
 import mmss.musicco.ui.fragments.TracksFragment;
 import rx.Observable;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MusiccoPlayer.OnTrackChangedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MusiccoPlayer.OnTrackChangedListener, ArtistsFragment.OnShowTracksListener {
 
     private static final String TAG = "MainActivity";
     @Inject
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fm = getFragmentManager();
             fm.beginTransaction().replace(R.id.content_main_container, f).commit();
         } else if (id == R.id.nav_actors) {
-            Fragment f = new ActorsFragment();
+            Fragment f = ArtistsFragment.create(this);
             FragmentManager fm = getFragmentManager();
             fm.beginTransaction().replace(R.id.content_main_container, f).commit();
         } else if (id == R.id.nav_play_lists) {
@@ -133,5 +133,13 @@ public class MainActivity extends AppCompatActivity
         } else {
             bottomSheetBehavior.setPeekHeight(peekHeightPixels);
         }
+    }
+
+    @Override
+    public void onShowTracks(Observable<List<Track>> tracksObservable) {
+        Fragment f = TracksFragment.create(tracksObservable);
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.content_main_container, f).commit();
+        //navigationView.getMenu().getItem(R.id.nav_tracks).setChecked(true);
     }
 }

@@ -138,7 +138,7 @@ public class TracksRepo {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<List<Artist>> getAllActors() {
+    public Observable<List<Artist>> getAllArtists() {
         return Observable.fromCallable(() -> {
             List<Artist> retVal = new ArrayList<>();
 
@@ -175,13 +175,12 @@ public class TracksRepo {
                     continue;
                 }
 
-                if (track.artist == null) {
-                    continue;
-                }
-
                 boolean found = false;
                 for (Artist artist : retVal) {
-                    if (artist.name.equals(track.artist)) {
+                    if (track.artist == null && artist.name == null) {
+                        artist.tracksCount++;
+                        found = true;
+                    } else if (track.artist != null && artist.name != null && artist.name.equals(track.artist)) {
                         artist.tracksCount++;
                         found = true;
                     }
@@ -235,11 +234,9 @@ public class TracksRepo {
                     continue;
                 }
 
-                if (track.artist == null) {
-                    continue;
-                }
-
-                if (track.artist.equals(artist)) {
+                if (track.artist == null && artist == null) {
+                    retVal.add(track);
+                } else if (track.artist != null && artist != null && track.artist.equals(artist)) {
                     retVal.add(track);
                 }
             }

@@ -3,14 +3,13 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
-    <string name="tracks_repo_artist_unknown">Неизвестный исполнитель</string>
-    <string name="fragment_tracks_empty_tracks">Треки отсутствуют</string>
-    <string name="fragment_tracks_lv_item_no_name">Без названия</string>
-    <string name="fragment_tracks_lv_item_no_album">Неизвестный альбом</string>
-    <string name="fragment_tracks_lv_item_no_artist">Неизвестный исполнитель</string>
 
-    <string name="fragment_player_unknown_track_text">Неизвестная композиция</string>
-    <string name="fragment_player_unknown_artist_text">Неизвестный исполнитель</string>
+    <string name="tracks_repo_empty_tracks">Треки отсутствуют</string>
+    <string name="tracks_repo_no_artists">Исполнители отсутствуют</string>
+    <string name="tracks_repo_artist_unknown">Неизвестный исполнитель</string>
+    <string name="tracks_repo_track_unknown">Неизвестная композиция</string>
+    <string name="tracks_repo_album_unknown">Неизвестный альбом</string>
+
+    <string name="fragment_artists_lv_item_tv_tracks_count_label_text">Композиций:</string>
 </resources>

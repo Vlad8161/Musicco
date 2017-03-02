@@ -8,8 +8,11 @@
         android:id="@+id/fragment_tracks_lv_item_tv_name"
         android:text="TrackName"
         android:textSize="16sp"
-        android:textColor="#000"
-        android:layout_margin="8dp"
+        android:textColor="@color/colorStrongText"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -17,7 +20,7 @@
         android:id="@+id/fragment_tracks_lv_item_tv_artist"
         android:layout_below="@id/fragment_tracks_lv_item_tv_name"
         android:text="Исполнитель"
-        android:textColor="#777777"
+        android:textColor="@color/colorWeakText"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"

@@ -1,7 +1,6 @@
 package mmss.musicco.ui.adapters;
 
 import android.content.Context;
-import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,8 +72,8 @@ public class TracksAdapter extends BaseAdapter {
 
         Track track = tracks.get(position);
 
-        holder.tvArtist.setText(track.artist != null ? track.artist : context.getString(R.string.fragment_tracks_lv_item_no_artist));
-        holder.tvName.setText(track.name != null ? track.name : context.getString(R.string.fragment_tracks_lv_item_no_name));
+        holder.tvArtist.setText(track.artist != null ? track.artist : context.getString(R.string.tracks_repo_artist_unknown));
+        holder.tvName.setText(track.name != null ? track.name : context.getString(R.string.tracks_repo_track_unknown));
 
         return convertView;
     }

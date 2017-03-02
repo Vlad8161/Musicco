@@ -103,12 +103,12 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
         if (currTrack != null && currTrack.name != null) {
             trackName = currTrack.name;
         } else {
-            trackName = getResources().getString(R.string.fragment_player_unknown_track_text);
+            trackName = getResources().getString(R.string.tracks_repo_track_unknown);
         }
         if (currTrack != null && currTrack.artist != null) {
             artistName = currTrack.artist;
         } else {
-            artistName = getResources().getString(R.string.fragment_player_unknown_track_text);
+            artistName = getResources().getString(R.string.tracks_repo_track_unknown);
         }
         tvTrackName.setText(artistName + " - " + trackName);
 
@@ -135,12 +135,12 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
         if (track != null && track.name != null) {
             trackName = track.name;
         } else {
-            trackName = getResources().getString(R.string.fragment_player_unknown_track_text);
+            trackName = getResources().getString(R.string.tracks_repo_track_unknown);
         }
         if (track != null && track.artist != null) {
             artistName = track.artist;
         } else {
-            artistName = getResources().getString(R.string.fragment_player_unknown_artist_text);
+            artistName = getResources().getString(R.string.tracks_repo_artist_unknown);
         }
         tvTrackName.setText(artistName + " - " + trackName);
 
