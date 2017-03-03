@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/fragment_albums_lv_item_tv_album"
+        android:text="Album"
+        android:textSize="16sp"
+        android:textColor="@color/colorStrongText"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/fragment_albums_lv_item_tv_count_label"
+        android:text="@string/fragment_artists_lv_item_tv_tracks_count_label_text"
+        android:textColor="@color/colorWeakText"
+        android:layout_below="@id/fragment_albums_lv_item_tv_album"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/fragment_albums_lv_item_tv_count"
+        android:text="36"
+        android:textColor="@color/colorWeakText"
+        android:layout_below="@id/fragment_albums_lv_item_tv_album"
+        android:layout_toRightOf="@id/fragment_albums_lv_item_tv_count_label"
+        android:layout_toEndOf="@id/fragment_albums_lv_item_tv_count_label"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

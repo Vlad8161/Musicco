@@ -7,6 +7,7 @@
 
     <string name="tracks_repo_empty_tracks">Треки отсутствуют</string>
     <string name="tracks_repo_no_artists">Исполнители отсутствуют</string>
+    <string name="tracks_repo_no_albums">Альбомы отсутствуют</string>
     <string name="tracks_repo_artist_unknown">Неизвестный исполнитель</string>
     <string name="tracks_repo_track_unknown">Неизвестная композиция</string>
     <string name="tracks_repo_album_unknown">Неизвестный альбом</string>
