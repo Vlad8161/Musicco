@@ -5,18 +5,22 @@
         <item
             android:id="@+id/nav_tracks"
             android:icon="@drawable/ic_menu_camera"
+            android:checkable="false"
             android:title="Треки" />
         <item
             android:id="@+id/nav_albums"
             android:icon="@drawable/ic_menu_gallery"
+            android:checkable="false"
             android:title="Альбомы" />
         <item
             android:id="@+id/nav_actors"
             android:icon="@drawable/ic_menu_slideshow"
+            android:checkable="false"
             android:title="Исполнители" />
         <item
             android:id="@+id/nav_play_lists"
             android:icon="@drawable/ic_menu_manage"
+            android:checkable="false"
             android:title="Плейлисты" />
     </group>
 

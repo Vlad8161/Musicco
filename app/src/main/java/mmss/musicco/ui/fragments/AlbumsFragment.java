@@ -13,9 +13,12 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import mmss.musicco.App;
 import mmss.musicco.R;
+import mmss.musicco.dataobjects.Album;
 import mmss.musicco.models.TracksRepo;
+import mmss.musicco.ui.activities.OnShowTracksListener;
 import mmss.musicco.ui.adapters.AlbumsAdapter;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -40,6 +43,13 @@ public class AlbumsFragment extends Fragment implements AdapterView.OnItemClickL
 
     private AlbumsAdapter adapter;
     private Subscription subscription;
+    private OnShowTracksListener showTracksListener;
+
+    public static AlbumsFragment create(OnShowTracksListener onShowTracksListener) {
+        AlbumsFragment f = new AlbumsFragment();
+        f.showTracksListener = onShowTracksListener;
+        return f;
+    }
 
     public AlbumsFragment() {
         App.getApp().inject(this);
@@ -49,6 +59,7 @@ public class AlbumsFragment extends Fragment implements AdapterView.OnItemClickL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_albums, null);
+        ButterKnife.bind(this, root);
         adapter = new AlbumsAdapter(getActivity(), null);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
@@ -69,7 +80,14 @@ public class AlbumsFragment extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        if (showTracksListener == null) {
+            return;
+        }
 
+        Album album = (Album) adapter.getItem(i);
+        if (album != null) {
+            showTracksListener.onShowTracks(tracksRepo.getAlbumTracks(album.artist, album.name));
+        }
     }
 
     private void startLoading() {

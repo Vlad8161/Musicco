@@ -30,7 +30,7 @@ import mmss.musicco.ui.fragments.TracksFragment;
 import rx.Observable;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MusiccoPlayer.OnTrackChangedListener, ArtistsFragment.OnShowTracksListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MusiccoPlayer.OnTrackChangedListener, OnShowTracksListener {
 
     private static final String TAG = "MainActivity";
     @Inject
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fm = getFragmentManager();
             fm.beginTransaction().replace(R.id.content_main_container, f).commit();
         } else if (id == R.id.nav_albums) {
-            Fragment f = new AlbumsFragment();
+            Fragment f = AlbumsFragment.create(this);
             FragmentManager fm = getFragmentManager();
             fm.beginTransaction().replace(R.id.content_main_container, f).commit();
         } else if (id == R.id.nav_actors) {
@@ -140,6 +140,6 @@ public class MainActivity extends AppCompatActivity
         Fragment f = TracksFragment.create(tracksObservable);
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_main_container, f).commit();
-        //navigationView.getMenu().getItem(R.id.nav_tracks).setChecked(true);
     }
+
 }

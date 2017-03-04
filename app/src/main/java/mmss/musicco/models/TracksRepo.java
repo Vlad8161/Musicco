@@ -114,10 +114,6 @@ public class TracksRepo {
                     continue;
                 }
 
-                if (track.artist == null || track.album == null) {
-                    continue;
-                }
-
                 boolean found = false;
                 for (Album album : retVal) {
 
@@ -299,11 +295,19 @@ public class TracksRepo {
                     continue;
                 }
 
-                if (track.artist == null || track.album == null) {
-                    continue;
+                boolean artistEquals = false;
+                if ((track.artist == null && artist == null) ||
+                        (track.artist != null && artist != null && track.artist.equals(artist))) {
+                    artistEquals = true;
                 }
 
-                if (track.artist.equals(artist) && track.album.equals(album)) {
+                boolean albumEquals = false;
+                if ((track.album == null && album == null) ||
+                        (track.album != null && album != null && track.album.equals(album))) {
+                    albumEquals = true;
+                }
+
+                if (artistEquals && albumEquals) {
                     retVal.add(track);
                 }
             }

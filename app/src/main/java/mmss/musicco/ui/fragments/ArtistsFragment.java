@@ -12,8 +12,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -21,10 +19,9 @@ import butterknife.ButterKnife;
 import mmss.musicco.App;
 import mmss.musicco.R;
 import mmss.musicco.dataobjects.Artist;
-import mmss.musicco.dataobjects.Track;
 import mmss.musicco.models.TracksRepo;
+import mmss.musicco.ui.activities.OnShowTracksListener;
 import mmss.musicco.ui.adapters.ArtistsAdapter;
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -130,8 +127,5 @@ public class ArtistsFragment extends Fragment implements AdapterView.OnItemClick
         }
     }
 
-    public interface OnShowTracksListener {
-        void onShowTracks(Observable<List<Track>> tracksObservable);
-    }
 }
 
