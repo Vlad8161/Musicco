@@ -21,7 +21,7 @@ import mmss.musicco.R;
  * Created by vlad on 3/5/17.
  */
 
-public class MediaButton extends ImageView {
+public class MediaButton extends ImageView implements View.OnClickListener {
     private static float DEFAULT_SHADOW_RADIUS = 3.0f;
     private static int DEFAULT_SHADOW_COLOR = 0x1D000000;
     private static int DEFAULT_BACKGROUND_COLOR = 0xFFFAFAFA;
@@ -121,6 +121,7 @@ public class MediaButton extends ImageView {
         mPaddingRight = getPaddingRight();
         mPaddingBottom = getPaddingBottom();
         updatePadding();
+        setOnClickListener(this);
     }
 
     @Override
@@ -220,6 +221,12 @@ public class MediaButton extends ImageView {
             return super.onTouchEvent(event);
         }
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    public void onClick(View v) {
+        // Это просто для того чтобы событие клика ни шло на следующий элемент
+        // и не сбивался фокус при клике
     }
 
     private class BackgroundShape extends Shape {

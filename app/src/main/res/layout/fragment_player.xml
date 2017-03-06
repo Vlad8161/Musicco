@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     android:padding="8dp">
 
@@ -12,7 +13,7 @@
         android:gravity="center"
         android:text="System of a Down - Vicinity of Obcinity (zaycev.net)"
         android:textAlignment="gravity"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
     <SeekBar
         android:id="@+id/fragment_player_seek_bar"
@@ -37,6 +38,8 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_gravity="center"
+            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+            custom:backgroundColor="@color/colorMediaButtonBg"
             android:layout_weight="1"
             android:cropToPadding="true"
             android:padding="10dp"
@@ -47,6 +50,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
+            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+            custom:backgroundColor="@color/colorMediaButtonBg"
             android:layout_weight="1"
             android:cropToPadding="true"
             android:paddingBottom="13dp"
@@ -68,11 +73,15 @@
                 android:layout_gravity="center"
                 android:cropToPadding="true"
                 android:padding="12dp"
+                custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+                custom:backgroundColor="@color/colorMediaButtonBg"
                 android:src="@drawable/ic_stop"
                 android:visibility="gone" />
 
             <mmss.musicco.ui.customviews.MediaButton
                 android:id="@+id/fragment_player_btn_pause"
+                custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+                custom:backgroundColor="@color/colorMediaButtonBg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -83,6 +92,8 @@
             <mmss.musicco.ui.customviews.MediaButton
                 android:id="@+id/fragment_player_btn_play"
                 android:layout_width="match_parent"
+                custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+                custom:backgroundColor="@color/colorMediaButtonBg"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:cropToPadding="true"
@@ -100,6 +111,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:cropToPadding="true"
+            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+            custom:backgroundColor="@color/colorMediaButtonBg"
             android:paddingBottom="13dp"
             android:paddingLeft="13dp"
             android:paddingRight="10dp"
@@ -110,6 +123,8 @@
             android:id="@+id/fragment_player_btn_next"
             android:layout_width="42dp"
             android:layout_height="42dp"
+            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+            custom:backgroundColor="@color/colorMediaButtonBg"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:cropToPadding="true"
