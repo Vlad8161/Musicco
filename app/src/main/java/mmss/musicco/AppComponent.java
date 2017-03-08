@@ -4,8 +4,8 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import mmss.musicco.ui.activities.MainActivity;
-import mmss.musicco.ui.fragments.ArtistsFragment;
 import mmss.musicco.ui.fragments.AlbumsFragment;
+import mmss.musicco.ui.fragments.ArtistsFragment;
 import mmss.musicco.ui.fragments.PlayerFragment;
 import mmss.musicco.ui.fragments.TracksFragment;
 
@@ -17,8 +17,12 @@ import mmss.musicco.ui.fragments.TracksFragment;
 @Component(modules = {AppModule.class})
 public interface AppComponent {
     void inject(MainActivity mainActivity);
+
     void inject(ArtistsFragment mainActivity);
+
     void inject(AlbumsFragment mainActivity);
+
     void inject(PlayerFragment mainActivity);
+
     void inject(TracksFragment mainActivity);
 }

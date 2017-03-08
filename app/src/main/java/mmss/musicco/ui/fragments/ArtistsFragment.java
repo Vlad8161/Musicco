@@ -115,7 +115,7 @@ public class ArtistsFragment extends Fragment implements AdapterView.OnItemClick
                         tvMessage.setVisibility(View.GONE);
                     }
 
-        });
+                });
     }
 
     private void cancelLoading() {

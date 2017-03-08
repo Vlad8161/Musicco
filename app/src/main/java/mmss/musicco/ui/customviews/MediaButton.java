@@ -3,18 +3,14 @@ package mmss.musicco.ui.customviews;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import mmss.musicco.App;
 import mmss.musicco.R;
 
 /**
@@ -35,10 +31,6 @@ public class MediaButton extends ImageView implements View.OnClickListener {
     private int mShadowColor;
     private boolean mOffsetXSpecified = false;
     private boolean mOffsetYSpecified = false;
-    private int mPaddingLeft;
-    private int mPaddingRight;
-    private int mPaddingTop;
-    private int mPaddingBottom;
 
     public MediaButton(Context context) {
         super(context);
@@ -116,21 +108,13 @@ public class MediaButton extends ImageView implements View.OnClickListener {
         mPaint.setStyle(Paint.Style.FILL);
         setLayerType(LAYER_TYPE_SOFTWARE, null);
         setBackground(new ShapeDrawable(new BackgroundShape()));
-        mPaddingLeft = getPaddingLeft();
-        mPaddingTop = getPaddingTop();
-        mPaddingRight = getPaddingRight();
-        mPaddingBottom = getPaddingBottom();
-        updatePadding();
         setOnClickListener(this);
     }
 
     @Override
-    public void setPadding(int left, int top, int right, int bottom) {
-        mPaddingLeft = left;
-        mPaddingTop = top;
-        mPaddingRight = right;
-        mPaddingBottom = bottom;
-        updatePadding();
+    protected void onDraw(Canvas canvas) {
+        canvas.translate(-mOffsetX, -mOffsetY);
+        super.onDraw(canvas);
     }
 
     public int getBackgroundColor() {
@@ -173,7 +157,6 @@ public class MediaButton extends ImageView implements View.OnClickListener {
             mOffsetY = mShadowRadius / 2;
         }
         mPaint.setShadowLayer(mShadowRadius, mOffsetX, mOffsetY, mShadowColor);
-        updatePadding();
         invalidate();
     }
 
@@ -185,7 +168,6 @@ public class MediaButton extends ImageView implements View.OnClickListener {
         mOffsetX = offsetX;
         mOffsetXSpecified = true;
         mPaint.setShadowLayer(mShadowRadius, mOffsetX, mOffsetY, mShadowColor);
-        updatePadding();
         invalidate();
     }
 
@@ -197,16 +179,7 @@ public class MediaButton extends ImageView implements View.OnClickListener {
         mOffsetY = offsetY;
         mOffsetYSpecified = true;
         mPaint.setShadowLayer(mShadowRadius, mOffsetX, mOffsetY, mShadowColor);
-        updatePadding();
         invalidate();
-    }
-
-    private void updatePadding() {
-        int paddingLeft = mPaddingLeft + mShadowRadius - mOffsetX;
-        int paddingTop = mPaddingTop + mShadowRadius - mOffsetY;
-        int paddingRight = mPaddingRight + mShadowRadius + mOffsetX;
-        int paddingBottom = mPaddingBottom + mShadowRadius + mOffsetY;
-        super.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
     }
 
     @Override
@@ -225,7 +198,7 @@ public class MediaButton extends ImageView implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        // Это просто для того чтобы событие клика ни шло на следующий элемент
+        // Это просто для того чтобы событие клика не шло на следующий элемент
         // и не сбивался фокус при клике
     }
 

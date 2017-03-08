@@ -2,7 +2,6 @@ package mmss.musicco.models;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;

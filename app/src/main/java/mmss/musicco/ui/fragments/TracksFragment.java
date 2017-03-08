@@ -103,19 +103,19 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
         subscription = observableTracks
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((tracks) -> {
-            mTracks = tracks;
-            if (tracks == null || tracks.isEmpty()) {
-                viewMessage.setText(R.string.tracks_repo_empty_tracks);
-                lvTracks.setVisibility(View.GONE);
-                viewMessage.setVisibility(View.VISIBLE);
-                viewProgress.setVisibility(View.GONE);
-            } else {
-                adapter.setTracks(tracks);
-                lvTracks.setVisibility(View.VISIBLE);
-                viewMessage.setVisibility(View.GONE);
-                viewProgress.setVisibility(View.GONE);
-            }
-        });
+                    mTracks = tracks;
+                    if (tracks == null || tracks.isEmpty()) {
+                        viewMessage.setText(R.string.tracks_repo_empty_tracks);
+                        lvTracks.setVisibility(View.GONE);
+                        viewMessage.setVisibility(View.VISIBLE);
+                        viewProgress.setVisibility(View.GONE);
+                    } else {
+                        adapter.setTracks(tracks);
+                        lvTracks.setVisibility(View.VISIBLE);
+                        viewMessage.setVisibility(View.GONE);
+                        viewProgress.setVisibility(View.GONE);
+                    }
+                });
     }
 
     @Override

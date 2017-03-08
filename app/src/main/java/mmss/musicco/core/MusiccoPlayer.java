@@ -68,7 +68,7 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
 
         HandlerThread thread = new HandlerThread("MusiccoPlayerThread");
         thread.start();
-        while (thread.getLooper() == null);
+        while (thread.getLooper() == null) ;
         mBackgroundHandler = new Handler(thread.getLooper());
         mUiHandler = new Handler(Looper.getMainLooper());
     }
