@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/white"
-    android:padding="8dp">
+    android:background="@android:color/white">
 
     <TextView
         android:id="@+id/fragment_player_tv_track_name"
@@ -37,28 +36,30 @@
             android:id="@+id/fragment_player_btn_prev"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:layout_gravity="center"
-            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-            custom:backgroundColor="@color/colorMediaButtonBg"
+            android:layout_marginBottom="7dp"
+            android:layout_marginTop="7dp"
             android:layout_weight="1"
             android:cropToPadding="true"
             android:padding="10dp"
-            android:src="@drawable/ic_prev" />
+            android:src="@drawable/ic_prev"
+            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+            custom:backgroundColor="@color/colorMediaButtonBg" />
 
         <mmss.musicco.ui.customviews.MediaButton
             android:id="@+id/fragment_player_btn_backward"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_gravity="center"
-            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-            custom:backgroundColor="@color/colorMediaButtonBg"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
             android:layout_weight="1"
             android:cropToPadding="true"
             android:paddingBottom="13dp"
             android:paddingLeft="10dp"
             android:paddingRight="13dp"
             android:paddingTop="13dp"
-            android:src="@drawable/ic_backward" />
+            android:src="@drawable/ic_backward"
+            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+            custom:backgroundColor="@color/colorMediaButtonBg" />
 
         <FrameLayout
             android:layout_width="56dp"
@@ -70,66 +71,65 @@
                 android:id="@+id/fragment_player_btn_stop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
                 android:cropToPadding="true"
                 android:padding="12dp"
-                custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-                custom:backgroundColor="@color/colorMediaButtonBg"
                 android:src="@drawable/ic_stop"
-                android:visibility="gone" />
+                android:visibility="gone"
+                custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+                custom:backgroundColor="@color/colorMediaButtonBg" />
 
             <mmss.musicco.ui.customviews.MediaButton
                 android:id="@+id/fragment_player_btn_pause"
-                custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-                custom:backgroundColor="@color/colorMediaButtonBg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
                 android:cropToPadding="true"
                 android:padding="14dp"
-                android:src="@drawable/ic_pause" />
+                android:src="@drawable/ic_pause"
+                custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+                custom:backgroundColor="@color/colorMediaButtonBg" />
 
             <mmss.musicco.ui.customviews.MediaButton
                 android:id="@+id/fragment_player_btn_play"
                 android:layout_width="match_parent"
-                custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-                custom:backgroundColor="@color/colorMediaButtonBg"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
                 android:cropToPadding="true"
                 android:paddingBottom="14dp"
                 android:paddingLeft="14dp"
                 android:paddingRight="10dp"
                 android:paddingTop="14dp"
-                android:src="@drawable/ic_play" />
+                android:src="@drawable/ic_play"
+                custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+                custom:backgroundColor="@color/colorMediaButtonBg" />
         </FrameLayout>
 
         <mmss.musicco.ui.customviews.MediaButton
             android:id="@+id/fragment_player_btn_forward"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_gravity="center"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
             android:layout_weight="1"
             android:cropToPadding="true"
-            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-            custom:backgroundColor="@color/colorMediaButtonBg"
             android:paddingBottom="13dp"
             android:paddingLeft="13dp"
             android:paddingRight="10dp"
             android:paddingTop="13dp"
-            android:src="@drawable/ic_forward" />
+            android:src="@drawable/ic_forward"
+            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+            custom:backgroundColor="@color/colorMediaButtonBg" />
 
         <mmss.musicco.ui.customviews.MediaButton
             android:id="@+id/fragment_player_btn_next"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-            custom:backgroundColor="@color/colorMediaButtonBg"
-            android:layout_gravity="center"
+            android:layout_marginBottom="7dp"
+            android:layout_marginTop="7dp"
             android:layout_weight="1"
             android:cropToPadding="true"
             android:padding="10dp"
-            android:src="@drawable/ic_next" />
+            android:src="@drawable/ic_next"
+            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+            custom:backgroundColor="@color/colorMediaButtonBg" />
     </LinearLayout>
 
 </RelativeLayout>

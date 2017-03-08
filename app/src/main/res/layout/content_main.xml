@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -11,6 +12,7 @@
         android:id="@+id/content_main_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 
@@ -18,40 +20,52 @@
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:layout_below="@id/content_main_toolbar"
-        android:layout_marginTop="?attr/actionBarSize"
         android:background="@drawable/shadow_down" />
+
+    <LinearLayout
+        android:id="@+id/content_main_bottom_sheet_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="8dp"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/content_main_dragger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp">
+
+            <View
+                android:layout_width="16dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_dragger" />
+        </LinearLayout>
+
+        <fragment
+            android:name="mmss.musicco.ui.fragments.PlayerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_player" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_above="@id/content_main_bottom_sheet_view"
+        android:background="@drawable/shadow_up" />
 
     <FrameLayout
         android:id="@+id/content_main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/content_main_toolbar"
-        android:layout_marginTop="?attr/actionBarSize" />
+        android:layout_above="@id/content_main_bottom_sheet_view"
+        android:layout_below="@id/content_main_toolbar" />
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/content_main_bottom_sheet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:behavior_peekHeight="116dp"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <View
-                android:background="@drawable/shadow_up"
-                android:layout_width="match_parent"
-                android:layout_height="4dp" />
-
-            <fragment
-                android:name="mmss.musicco.ui.fragments.PlayerFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/content_main_bottom_sheet_fragment"
-                tools:layout="@layout/fragment_player" />
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>
