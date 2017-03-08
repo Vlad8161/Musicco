@@ -109,10 +109,10 @@ public class ArtistsFragment extends Fragment implements AdapterView.OnItemClick
                         progressBar.setVisibility(View.GONE);
                         tvMessage.setVisibility(View.GONE);
                     } else {
-                        listView.setVisibility(View.VISIBLE);
+                        listView.setVisibility(View.GONE);
                         progressBar.setVisibility(View.GONE);
                         tvMessage.setText(R.string.tracks_repo_no_artists);
-                        tvMessage.setVisibility(View.GONE);
+                        tvMessage.setVisibility(View.VISIBLE);
                     }
 
                 });

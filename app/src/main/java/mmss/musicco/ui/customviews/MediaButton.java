@@ -19,7 +19,7 @@ import mmss.musicco.R;
 
 public class MediaButton extends ImageView implements View.OnClickListener {
     private static float DEFAULT_SHADOW_RADIUS = 3.0f;
-    private static int DEFAULT_SHADOW_COLOR = 0x1D000000;
+    private static int DEFAULT_SHADOW_COLOR = 0x3E000000;
     private static int DEFAULT_BACKGROUND_COLOR = 0xFFFAFAFA;
     private static int DEFAULT_BACKGROUND_CLICKED_COLOR = 0xFF7FDBFF;
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

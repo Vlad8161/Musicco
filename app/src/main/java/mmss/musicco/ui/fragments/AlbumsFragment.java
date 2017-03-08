@@ -109,7 +109,7 @@ public class AlbumsFragment extends Fragment implements AdapterView.OnItemClickL
                         listView.setVisibility(View.GONE);
                         pbProgress.setVisibility(View.GONE);
                         tvMessage.setText(R.string.tracks_repo_no_albums);
-                        tvMessage.setVisibility(View.GONE);
+                        tvMessage.setVisibility(View.VISIBLE);
                     }
                 });
     }

@@ -9,9 +9,9 @@
         android:translateY="254.1449">
         <path
             android:pathData="M-1314.2428 -254.14493l0 87.29999 51 -44.60001z"
-            android:fillColor="#2e2d2e" />
+            android:fillColor="#555555" />
         <path
             android:pathData="M-1251.1429 -254.14493l0 87.29999 51.1 -44.60001z"
-            android:fillColor="#2e2d2e" />
+            android:fillColor="#555555" />
     </group>
 </vector>
