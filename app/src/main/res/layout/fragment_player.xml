@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,129 +7,184 @@
 
     <TextView
         android:id="@+id/fragment_player_tv_track_name"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="System of a Down - Vicinity of Obcinity (zaycev.net)"
-        android:textAlignment="gravity"
-        android:textSize="14sp" />
+        android:textAlignment="center"
+        android:textSize="14sp"
+        custom:layout_constraintLeft_toLeftOf="parent"
+        custom:layout_constraintRight_toRightOf="parent"
+        custom:layout_constraintTop_toTopOf="parent" />
 
     <SeekBar
         android:id="@+id/fragment_player_seek_bar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/fragment_player_tv_track_name"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="8dp"
         android:paddingLeft="8dp"
-        android:paddingRight="8dp" />
+        android:paddingRight="8dp"
+        custom:layout_constraintHorizontal_bias="0.0"
+        custom:layout_constraintLeft_toRightOf="@+id/fragment_player_tv_curr_pos"
+        custom:layout_constraintRight_toLeftOf="@+id/fragment_player_tv_max_pos"
+        custom:layout_constraintTop_toBottomOf="@+id/fragment_player_tv_track_name" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/fragment_player_seek_bar"
-        android:layout_marginEnd="28dp"
-        android:layout_marginLeft="28dp"
-        android:layout_marginRight="28dp"
-        android:layout_marginStart="28dp"
-        android:orientation="horizontal">
+    <mmss.musicco.ui.customviews.MediaButton
+        android:id="@+id/fragment_player_btn_prev"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginLeft="33dp"
+        android:layout_marginTop="7dp"
+        android:layout_weight="1"
+        android:cropToPadding="true"
+        android:padding="12dp"
+        android:src="@drawable/ic_prev"
+        custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+        custom:backgroundColor="@color/colorMediaButtonBg"
+        custom:layout_constraintLeft_toLeftOf="parent"
+        custom:layout_constraintTop_toBottomOf="@+id/fragment_player_seek_bar" />
 
+    <mmss.musicco.ui.customviews.MediaButton
+        android:id="@+id/fragment_player_btn_backward"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="3dp"
+        android:layout_weight="1"
+        android:cropToPadding="true"
+        android:paddingBottom="14dp"
+        android:paddingLeft="11dp"
+        android:paddingRight="14dp"
+        android:paddingTop="14dp"
+        android:src="@drawable/ic_backward"
+        custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+        custom:backgroundColor="@color/colorMediaButtonBg"
+        custom:layout_constraintLeft_toRightOf="@+id/fragment_player_btn_prev"
+        custom:layout_constraintRight_toLeftOf="@+id/fragment_player_btn_play"
+        custom:layout_constraintTop_toBottomOf="@+id/fragment_player_seek_bar" />
+
+    <!-- Пока не юзаем :) -->
+    <!--
         <mmss.musicco.ui.customviews.MediaButton
-            android:id="@+id/fragment_player_btn_prev"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginBottom="7dp"
-            android:layout_marginTop="7dp"
-            android:layout_weight="1"
-            android:padding="12dp"
-            android:cropToPadding="true"
-            android:src="@drawable/ic_prev"
-            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-            custom:backgroundColor="@color/colorMediaButtonBg" />
-
-        <mmss.musicco.ui.customviews.MediaButton
-            android:id="@+id/fragment_player_btn_backward"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
-            android:layout_weight="1"
-            android:cropToPadding="true"
-            android:paddingBottom="14dp"
-            android:paddingLeft="11dp"
-            android:paddingRight="14dp"
-            android:paddingTop="14dp"
-            android:src="@drawable/ic_backward"
-            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-            custom:backgroundColor="@color/colorMediaButtonBg" />
-
-        <FrameLayout
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_weight="1">
-
-            <!-- Пока не юзаем :) -->
-            <mmss.musicco.ui.customviews.MediaButton
-                android:id="@+id/fragment_player_btn_stop"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:cropToPadding="true"
-                android:padding="12dp"
-                android:src="@drawable/ic_stop"
-                android:visibility="gone"
-                custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-                custom:backgroundColor="@color/colorMediaButtonBg" />
-
-            <mmss.musicco.ui.customviews.MediaButton
-                android:id="@+id/fragment_player_btn_pause"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:cropToPadding="true"
-                android:padding="14dp"
-                android:src="@drawable/ic_pause"
-                custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-                custom:backgroundColor="@color/colorMediaButtonBg" />
-
-            <mmss.musicco.ui.customviews.MediaButton
-                android:id="@+id/fragment_player_btn_play"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:cropToPadding="true"
-                android:paddingBottom="14dp"
-                android:paddingLeft="14dp"
-                android:paddingRight="10dp"
-                android:paddingTop="14dp"
-                android:src="@drawable/ic_play"
-                custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-                custom:backgroundColor="@color/colorMediaButtonBg" />
-        </FrameLayout>
-
-        <mmss.musicco.ui.customviews.MediaButton
-            android:id="@+id/fragment_player_btn_forward"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
-            android:layout_weight="1"
-            android:cropToPadding="true"
-            android:paddingBottom="14dp"
-            android:paddingLeft="14dp"
-            android:paddingRight="11dp"
-            android:paddingTop="14dp"
-            android:src="@drawable/ic_forward"
-            custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-            custom:backgroundColor="@color/colorMediaButtonBg" />
-
-        <mmss.musicco.ui.customviews.MediaButton
-            android:id="@+id/fragment_player_btn_next"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginBottom="7dp"
-            android:layout_marginTop="7dp"
-            android:layout_weight="1"
+            android:id="@+id/fragment_player_btn_stop"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:cropToPadding="true"
             android:padding="12dp"
-            android:src="@drawable/ic_next"
+            android:src="@drawable/ic_stop"
+            android:visibility="gone"
             custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
-            custom:backgroundColor="@color/colorMediaButtonBg" />
-    </LinearLayout>
+            custom:backgroundColor="@color/colorMediaButtonBg"
+            tools:layout_editor_absoluteY="0dp"
+            tools:layout_editor_absoluteX="0dp" />
+    -->
 
-</RelativeLayout>
+    <mmss.musicco.ui.customviews.MediaButton
+        android:id="@+id/fragment_player_btn_pause"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:cropToPadding="true"
+        android:padding="14dp"
+        android:src="@drawable/ic_pause"
+        custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+        custom:backgroundColor="@color/colorMediaButtonBg"
+        custom:layout_constraintLeft_toRightOf="@+id/fragment_player_btn_prev"
+        custom:layout_constraintRight_toLeftOf="@+id/fragment_player_btn_next"
+        custom:layout_constraintTop_toBottomOf="@+id/fragment_player_seek_bar" />
+
+    <mmss.musicco.ui.customviews.MediaButton
+        android:id="@+id/fragment_player_btn_play"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:cropToPadding="true"
+        android:paddingBottom="14dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="10dp"
+        android:paddingTop="14dp"
+        android:src="@drawable/ic_play"
+        custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+        custom:backgroundColor="@color/colorMediaButtonBg"
+        custom:layout_constraintBottom_toBottomOf="parent"
+        custom:layout_constraintHorizontal_bias="0.503"
+        custom:layout_constraintLeft_toRightOf="@+id/fragment_player_btn_prev"
+        custom:layout_constraintRight_toLeftOf="@+id/fragment_player_btn_next"
+        custom:layout_constraintTop_toBottomOf="@+id/fragment_player_seek_bar" />
+
+    <mmss.musicco.ui.customviews.MediaButton
+        android:id="@+id/fragment_player_btn_forward"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="3dp"
+        android:cropToPadding="true"
+        android:paddingBottom="14dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="11dp"
+        android:paddingTop="14dp"
+        android:src="@drawable/ic_forward"
+        custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+        custom:backgroundColor="@color/colorMediaButtonBg"
+        custom:layout_constraintLeft_toRightOf="@+id/fragment_player_btn_play"
+        custom:layout_constraintRight_toLeftOf="@+id/fragment_player_btn_next"
+        custom:layout_constraintTop_toBottomOf="@+id/fragment_player_seek_bar" />
+
+    <mmss.musicco.ui.customviews.MediaButton
+        android:id="@+id/fragment_player_btn_next"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="7dp"
+        android:cropToPadding="true"
+        android:padding="12dp"
+        android:src="@drawable/ic_next"
+        custom:backgroundClickedColor="@color/colorMediaButtonBgClicked"
+        custom:backgroundColor="@color/colorMediaButtonBg"
+        custom:layout_constraintRight_toRightOf="parent"
+        custom:layout_constraintTop_toBottomOf="@+id/fragment_player_seek_bar" />
+
+    <TextView
+        android:id="@+id/fragment_player_tv_curr_pos"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
+        android:gravity="center"
+        android:text="25:40"
+        android:textSize="12sp"
+        custom:layout_constraintBottom_toTopOf="@+id/fragment_player_btn_play"
+        custom:layout_constraintLeft_toLeftOf="parent"
+        custom:layout_constraintTop_toTopOf="@+id/fragment_player_seek_bar"
+        custom:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/fragment_player_tv_max_pos"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:gravity="center"
+        android:text="125:40"
+        android:textSize="12sp"
+        custom:layout_constraintBottom_toTopOf="@+id/fragment_player_btn_play"
+        custom:layout_constraintRight_toRightOf="parent"
+        custom:layout_constraintTop_toTopOf="@+id/fragment_player_seek_bar"
+        custom:layout_constraintVertical_bias="0.0" />
+
+</android.support.constraint.ConstraintLayout>

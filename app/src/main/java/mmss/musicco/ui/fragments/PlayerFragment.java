@@ -40,14 +40,17 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
     @BindView(R.id.fragment_player_btn_pause)
     View btnPause;
 
-    @BindView(R.id.fragment_player_btn_stop)
-    View btnStop;
-
     @BindView(R.id.fragment_player_seek_bar)
     SeekBar seekBar;
 
     @BindView(R.id.fragment_player_tv_track_name)
     TextView tvTrackName;
+
+    @BindView(R.id.fragment_player_tv_curr_pos)
+    TextView tvCurrPos;
+
+    @BindView(R.id.fragment_player_tv_max_pos)
+    TextView tvMaxPos;
 
     private SeekBar.OnSeekBarChangeListener seekBarListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
@@ -84,17 +87,14 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
             seekBar.setEnabled(true);
             btnPlay.setVisibility(View.INVISIBLE);
             btnPause.setVisibility(View.VISIBLE);
-            btnStop.setEnabled(true);
         } else if (musiccoPlayer.getState() == MusiccoPlayer.STATE_PAUSED) {
             seekBar.setEnabled(true);
             btnPlay.setVisibility(View.VISIBLE);
             btnPause.setVisibility(View.INVISIBLE);
-            btnStop.setEnabled(true);
         } else if (musiccoPlayer.getState() == MusiccoPlayer.STATE_STOPPED) {
             seekBar.setEnabled(false);
             btnPlay.setVisibility(View.VISIBLE);
             btnPause.setVisibility(View.INVISIBLE);
-            btnStop.setEnabled(false);
         }
 
         String trackName;
@@ -158,6 +158,12 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
             seekBar.setMax(dur);
             seekBar.setProgress(pos);
         }
+        int currMins = pos / 60000;
+        int currSecs = (int) ((pos / 1000f) % 60);
+        tvCurrPos.setText(String.format("%02d:%02d", currMins, currSecs));
+        int maxMins = dur / 60000;
+        int maxSecs = (int) ((dur / 1000f) % 60);
+        tvMaxPos.setText(String.format("%02d:%02d", maxMins, maxSecs));
     }
 
     @Override
@@ -166,17 +172,14 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
             seekBar.setEnabled(true);
             btnPlay.setVisibility(View.INVISIBLE);
             btnPause.setVisibility(View.VISIBLE);
-            btnStop.setEnabled(true);
         } else if (state == MusiccoPlayer.STATE_PAUSED) {
             seekBar.setEnabled(true);
             btnPlay.setVisibility(View.VISIBLE);
             btnPause.setVisibility(View.INVISIBLE);
-            btnStop.setEnabled(true);
         } else if (state == MusiccoPlayer.STATE_STOPPED) {
             seekBar.setEnabled(false);
             btnPlay.setVisibility(View.VISIBLE);
             btnPause.setVisibility(View.INVISIBLE);
-            btnStop.setEnabled(false);
         }
     }
 
@@ -188,11 +191,6 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
     @OnClick(R.id.fragment_player_btn_pause)
     public void onClickPause() {
         musiccoPlayer.pause();
-    }
-
-    @OnClick(R.id.fragment_player_btn_stop)
-    public void onClickStop() {
-        musiccoPlayer.stop();
     }
 
     @OnClick(R.id.fragment_player_btn_next)
