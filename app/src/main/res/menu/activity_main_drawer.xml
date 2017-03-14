@@ -22,6 +22,11 @@
             android:icon="@drawable/ic_menu_manage"
             android:checkable="false"
             android:title="Плейлисты" />
+        <item
+            android:id="@+id/nav_current_track_list"
+            android:icon="@drawable/ic_menu_manage"
+            android:checkable="false"
+            android:title="Сейчас играет" />
     </group>
 
 </menu>

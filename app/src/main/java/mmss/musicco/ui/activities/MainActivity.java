@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -118,6 +119,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (musiccoPlayer.getTracks() != null) {
+            navigationView.getMenu().findItem(R.id.nav_current_track_list).setVisible(true);
+        } else {
+            navigationView.getMenu().findItem(R.id.nav_current_track_list).setVisible(false);
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -130,7 +141,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.nav_tracks) {
@@ -146,6 +157,10 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fm = getFragmentManager();
             fm.beginTransaction().replace(R.id.content_main_container, f).commit();
         } else if (id == R.id.nav_play_lists) {
+        } else if (id == R.id.nav_current_track_list) {
+            Fragment f = TracksFragment.create(Observable.just(musiccoPlayer.getTracks()));
+            FragmentManager fm = getFragmentManager();
+            fm.beginTransaction().replace(R.id.content_main_container, f).commit();
         }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -159,6 +174,12 @@ public class MainActivity extends AppCompatActivity
             showPlayer();
         } else {
             hidePlayer();
+        }
+
+        if (musiccoPlayer.getTracks() != null) {
+            navigationView.getMenu().findItem(R.id.nav_current_track_list).setVisible(true);
+        } else {
+            navigationView.getMenu().findItem(R.id.nav_current_track_list).setVisible(false);
         }
     }
 

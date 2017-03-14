@@ -31,22 +31,18 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class TracksFragment extends Fragment implements AdapterView.OnItemClickListener, MusiccoPlayer.OnTrackChangedListener, MusiccoPlayer.OnStateChangedListener {
+    @BindView(R.id.fragment_tracks_view_list)
+    public ListView lvTracks;
+    @BindView(R.id.fragment_tracks_view_progress)
+    public View viewProgress;
+    @BindView(R.id.fragment_tracks_view_message)
+    public TextView viewMessage;
+    @Inject
+    public MusiccoPlayer musiccoPlayer;
     private Observable<List<Track>> observableTracks;
     private Subscription subscription;
     private TracksAdapter adapter;
     private List<Track> mTracks = null;
-
-    @BindView(R.id.fragment_tracks_view_list)
-    public ListView lvTracks;
-
-    @BindView(R.id.fragment_tracks_view_progress)
-    public View viewProgress;
-
-    @BindView(R.id.fragment_tracks_view_message)
-    public TextView viewMessage;
-
-    @Inject
-    public MusiccoPlayer musiccoPlayer;
 
     public static TracksFragment create(Observable<List<Track>> observableTracks) {
         if (observableTracks == null) {
@@ -120,9 +116,7 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
                         viewProgress.setVisibility(View.GONE);
                     } else {
                         adapter.setTracks(tracks);
-                        if (musiccoPlayer.getState() == MusiccoPlayer.STATE_PLAYING) {
-                            adapter.onTrackChanged(musiccoPlayer.getCurrentTrack());
-                        }
+                        adapter.onTrackChanged(musiccoPlayer.getCurrentTrack());
                         lvTracks.setVisibility(View.VISIBLE);
                         viewMessage.setVisibility(View.GONE);
                         viewProgress.setVisibility(View.GONE);
