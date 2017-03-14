@@ -120,6 +120,9 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
                         viewProgress.setVisibility(View.GONE);
                     } else {
                         adapter.setTracks(tracks);
+                        if (musiccoPlayer.getState() == MusiccoPlayer.STATE_PLAYING) {
+                            adapter.onTrackChanged(musiccoPlayer.getCurrentTrack());
+                        }
                         lvTracks.setVisibility(View.VISIBLE);
                         viewMessage.setVisibility(View.GONE);
                         viewProgress.setVisibility(View.GONE);
