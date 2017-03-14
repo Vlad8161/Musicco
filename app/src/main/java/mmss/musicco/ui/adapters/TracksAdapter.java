@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
 import mmss.musicco.R;
+import mmss.musicco.core.MusiccoPlayer;
 import mmss.musicco.dataobjects.Track;
 
 /**
@@ -19,15 +21,31 @@ import mmss.musicco.dataobjects.Track;
 public class TracksAdapter extends BaseAdapter {
     private List<Track> tracks;
     private Context context;
+    private MusiccoPlayer musiccoPlayer;
+    private String currentPlayingTrackUrl;
 
-    public TracksAdapter(Context context) {
-        super();
+    public TracksAdapter(Context context, MusiccoPlayer musiccoPlayer) {
         this.context = context;
+        this.musiccoPlayer = musiccoPlayer;
     }
 
     public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
         this.notifyDataSetChanged();
+    }
+
+    public void onTrackChanged(Track track) {
+        if (tracks == null) {
+            return;
+        }
+
+        if (track != null && track.url != null) {
+            currentPlayingTrackUrl = track.url;
+        } else {
+            currentPlayingTrackUrl = null;
+        }
+
+        notifyDataSetChanged();
     }
 
     @Override
@@ -65,6 +83,7 @@ public class TracksAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.tvArtist = (TextView) convertView.findViewById(R.id.fragment_tracks_lv_item_tv_artist);
             holder.tvName = (TextView) convertView.findViewById(R.id.fragment_tracks_lv_item_tv_name);
+            holder.ivPlayState = (ImageView) convertView.findViewById(R.id.fragment_tracks_lv_item_image_view);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -74,6 +93,15 @@ public class TracksAdapter extends BaseAdapter {
 
         holder.tvArtist.setText(track.artist != null ? track.artist : context.getString(R.string.tracks_repo_artist_unknown));
         holder.tvName.setText(track.name != null ? track.name : context.getString(R.string.tracks_repo_track_unknown));
+        if (currentPlayingTrackUrl != null && track.url != null && currentPlayingTrackUrl.equals(track.url)) {
+            if (musiccoPlayer.getState() == MusiccoPlayer.STATE_PLAYING) {
+                holder.ivPlayState.setImageResource(R.drawable.ic_pause);
+            } else {
+                holder.ivPlayState.setImageResource(R.drawable.ic_play);
+            }
+        } else {
+            holder.ivPlayState.setImageResource(R.drawable.ic_play);
+        }
 
         return convertView;
     }
@@ -81,5 +109,6 @@ public class TracksAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView tvArtist;
         TextView tvName;
+        ImageView ivPlayState;
     }
 }

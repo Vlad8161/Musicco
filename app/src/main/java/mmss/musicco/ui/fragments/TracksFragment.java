@@ -30,7 +30,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by User on 12.10.2016.
  */
 
-public class TracksFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class TracksFragment extends Fragment implements AdapterView.OnItemClickListener, MusiccoPlayer.OnTrackChangedListener, MusiccoPlayer.OnStateChangedListener {
     private Observable<List<Track>> observableTracks;
     private Subscription subscription;
     private TracksAdapter adapter;
@@ -64,10 +64,19 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_tracks, null);
         ButterKnife.bind(this, v);
-        adapter = new TracksAdapter(getActivity().getApplicationContext());
+        adapter = new TracksAdapter(getActivity().getApplicationContext(), musiccoPlayer);
         lvTracks.setAdapter(adapter);
         lvTracks.setOnItemClickListener(this);
+        musiccoPlayer.addOnTrackChangedListener(this);
+        musiccoPlayer.addOnStateChangedListener(this);
         return v;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        musiccoPlayer.removeOnTrackChangedListener(this);
+        musiccoPlayer.removeOnStateChangedListener(this);
     }
 
     @Override
@@ -130,5 +139,15 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
         } else {
             musiccoPlayer.play();
         }
+    }
+
+    @Override
+    public void onTrackChangedListener(Track track) {
+        adapter.onTrackChanged(track);
+    }
+
+    @Override
+    public void onStateChangedListener(int state) {
+        adapter.notifyDataSetChanged();
     }
 }
