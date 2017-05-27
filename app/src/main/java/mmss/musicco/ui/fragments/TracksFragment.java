@@ -51,7 +51,6 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
 
         TracksFragment f = new TracksFragment();
         f.observableTracks = observableTracks;
-        App.getApp().inject(f);
         return f;
     }
 
@@ -60,6 +59,7 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_tracks, null);
         ButterKnife.bind(this, v);
+        App.getApp().inject(this);
         adapter = new TracksAdapter(getActivity().getApplicationContext(), musiccoPlayer);
         lvTracks.setAdapter(adapter);
         lvTracks.setOnItemClickListener(this);
