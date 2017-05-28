@@ -13,12 +13,33 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="System of a Down - Vicinity of Obcinity (zaycev.net)"
+        android:text="Vicinity of Obcinity (zaycev.net)"
+        android:textColor="@color/colorStrongText"
         android:textAlignment="center"
-        android:textSize="14sp"
+        android:textSize="24sp"
+        android:singleLine="true"
+        android:ellipsize="end"
         custom:layout_constraintLeft_toLeftOf="parent"
         custom:layout_constraintRight_toRightOf="parent"
         custom:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/fragment_player_tv_track_artist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:text="System of a Down"
+        android:textColor="@color/colorWeakText"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textSize="16sp"
+        android:textAlignment="center"
+        custom:layout_constraintLeft_toLeftOf="parent"
+        custom:layout_constraintRight_toRightOf="parent"
+        custom:layout_constraintTop_toBottomOf="@+id/fragment_player_tv_track_name"
+        custom:layout_constraintHorizontal_bias="0.0" />
 
     <SeekBar
         android:id="@+id/fragment_player_seek_bar"
@@ -33,7 +54,7 @@
         custom:layout_constraintHorizontal_bias="0.0"
         custom:layout_constraintLeft_toRightOf="@+id/fragment_player_tv_curr_pos"
         custom:layout_constraintRight_toLeftOf="@+id/fragment_player_tv_max_pos"
-        custom:layout_constraintTop_toBottomOf="@+id/fragment_player_tv_track_name" />
+        custom:layout_constraintTop_toBottomOf="@+id/fragment_player_tv_track_artist" />
 
     <mmss.musicco.ui.customviews.MediaButton
         android:id="@+id/fragment_player_btn_prev"

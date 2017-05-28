@@ -67,9 +67,10 @@ public class NotOverlappingBottomSheetLayout extends ViewGroup {
             int freeHeight = Math.max(height - mBottomSheetPeekHeight, 0);
             for (int i = 0; i < childCount - 1; i++) {
                 View child = getChildAt(i);
+                int mode = child.getLayoutParams().height == LayoutParams.MATCH_PARENT ? MeasureSpec.EXACTLY : MeasureSpec.AT_MOST;
                 child.measure(
                         MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-                        MeasureSpec.makeMeasureSpec(freeHeight, MeasureSpec.AT_MOST)
+                        MeasureSpec.makeMeasureSpec(freeHeight, mode)
                 );
                 int childHeight = child.getMeasuredHeight();
                 freeHeight -= childHeight;

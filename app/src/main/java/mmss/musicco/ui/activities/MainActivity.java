@@ -12,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -109,9 +108,9 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         bottomSheetView.setOnTouchListener(this);
-        rootLayout.addOnSizeChangedListener((w, h, oldw, oldh) -> {
+        bottomSheetView.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
             mDraggerHeight = dragger.getMeasuredHeight();
-            mPlayerHeight = bottomSheetView.getMeasuredHeight() - mDraggerHeight;
+            mPlayerHeight = b - t;
             if (mBottomSheetState == BOTTOM_SHEET_STATE_SHOWN) {
                 setPlayerPeekHeight(mPlayerHeight);
             } else if (mBottomSheetState == BOTTOM_SHEET_STATE_HIDDEN) {

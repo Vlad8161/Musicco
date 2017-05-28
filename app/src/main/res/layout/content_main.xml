@@ -26,6 +26,7 @@
         android:id="@+id/content_main_bottom_sheet_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
         android:layout_below="@id/content_main_toolbar">
 
         <FrameLayout
@@ -35,6 +36,7 @@
 
         <LinearLayout
             android:id="@+id/content_main_bottom_sheet_view"
+            android:elevation="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

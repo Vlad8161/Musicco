@@ -46,6 +46,9 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
     @BindView(R.id.fragment_player_tv_track_name)
     TextView tvTrackName;
 
+    @BindView(R.id.fragment_player_tv_track_artist)
+    TextView tvTrackArtist;
+
     @BindView(R.id.fragment_player_tv_curr_pos)
     TextView tvCurrPos;
 
@@ -110,7 +113,8 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
         } else {
             artistName = getResources().getString(R.string.tracks_repo_track_unknown);
         }
-        tvTrackName.setText(artistName + " - " + trackName);
+        tvTrackName.setText(trackName);
+        tvTrackArtist.setText(artistName);
 
         int dur = musiccoPlayer.getDuration();
         int pos = musiccoPlayer.getCurrentPosition();
@@ -142,7 +146,8 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
         } else {
             artistName = getResources().getString(R.string.tracks_repo_artist_unknown);
         }
-        tvTrackName.setText(artistName + " - " + trackName);
+        tvTrackName.setText(trackName);
+        tvTrackArtist.setText(artistName);
 
         Integer trackIndex = musiccoPlayer.getCurrentTrackIndex();
         int tracksCount = musiccoPlayer.getTracksCount();
