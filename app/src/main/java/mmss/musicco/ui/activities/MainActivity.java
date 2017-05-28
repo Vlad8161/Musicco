@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 
@@ -27,7 +28,6 @@ import mmss.musicco.R;
 import mmss.musicco.core.MusiccoPlayer;
 import mmss.musicco.dataobjects.Track;
 import mmss.musicco.models.TracksRepo;
-import mmss.musicco.ui.customviews.MeasurableRelativeLayout;
 import mmss.musicco.ui.customviews.NotOverlappingBottomSheetLayout;
 import mmss.musicco.ui.fragments.AlbumsFragment;
 import mmss.musicco.ui.fragments.ArtistsFragment;
@@ -37,10 +37,11 @@ import rx.Observable;
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, MusiccoPlayer.OnTrackChangedListener,
         OnShowTracksListener, View.OnTouchListener, ValueAnimator.AnimatorUpdateListener,
-        Animator.AnimatorListener {
+        Animator.AnimatorListener, View.OnLayoutChangeListener {
     private static final String TAG = "MainActivity";
     private static final int BOTTOM_SHEET_STATE_HIDDEN = 0;
     private static final int BOTTOM_SHEET_STATE_SHOWN = 1;
+    private static final int MIN_DRAG_VELOCITY = 4;
 
     @Inject
     TracksRepo tracksRepo;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements
     View bottomSheetView;
 
     @BindView(R.id.content_main_root)
-    MeasurableRelativeLayout rootLayout;
+    RelativeLayout rootLayout;
 
     @BindView(R.id.content_main_bottom_sheet_layout)
     NotOverlappingBottomSheetLayout bottomSheetLayout;
@@ -74,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements
     private int mStartBottomSheetHeight;
     private int mBottomSheetState = BOTTOM_SHEET_STATE_HIDDEN;
     private int mStartDragY;
+    private int mPrevDragY;
+    private int mDragVelocity;
     private boolean isDraggingNow = false;
     private ValueAnimator mBottomSheetAnimator = null;
 
@@ -90,16 +93,12 @@ public class MainActivity extends AppCompatActivity implements
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView.setNavigationItemSelectedListener(this);
-
         FragmentManager fm = getFragmentManager();
         Observable<List<Track>> obsTracks = tracksRepo.getAllTracks();
         fm.beginTransaction()
                 .replace(R.id.content_main_container, TracksFragment.create(obsTracks))
                 .commit();
         navigationView.setCheckedItem(R.id.nav_tracks);
-
-        musiccoPlayer.addOnTrackChangedListener(this);
 
         if (musiccoPlayer.getState() == MusiccoPlayer.STATE_STOPPED) {
             mBottomSheetState = BOTTOM_SHEET_STATE_HIDDEN;
@@ -108,21 +107,16 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         bottomSheetView.setOnTouchListener(this);
-        bottomSheetView.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
-            mDraggerHeight = dragger.getMeasuredHeight();
-            mPlayerHeight = b - t;
-            if (mBottomSheetState == BOTTOM_SHEET_STATE_SHOWN) {
-                setPlayerPeekHeight(mPlayerHeight);
-            } else if (mBottomSheetState == BOTTOM_SHEET_STATE_HIDDEN) {
-                setPlayerPeekHeight(0);
-            }
-        });
+        bottomSheetView.addOnLayoutChangeListener(this);
+        musiccoPlayer.addOnTrackChangedListener(this);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         musiccoPlayer.removeOnTrackChangedListener(this);
+        bottomSheetView.removeOnLayoutChangeListener(this);
     }
 
     @Override
@@ -206,24 +200,39 @@ public class MainActivity extends AppCompatActivity implements
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             mStartBottomSheetHeight = bottomSheetLayout.getBottomSheetPeekHeight();
             mStartDragY = yFromDraggerToRootLayout((int) event.getY());
+            mPrevDragY = mStartDragY;
             isDraggingNow = true;
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             int currY = yFromDraggerToRootLayout((int) event.getY());
             int deltaY = currY - mStartDragY;
             int newBottomSheetHeight = mStartBottomSheetHeight - deltaY;
+            mDragVelocity = currY - mPrevDragY;
+            mPrevDragY = currY;
             newBottomSheetHeight = Math.min(newBottomSheetHeight, mPlayerHeight);
             newBottomSheetHeight = Math.max(newBottomSheetHeight, mDraggerHeight);
             setPlayerPeekHeight(newBottomSheetHeight);
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
             isDraggingNow = false;
-            if (mBottomSheetState == BOTTOM_SHEET_STATE_SHOWN) {
-                if (getPlayerPeekHeight() < mPlayerHeight / 2) {
-                    animatePlayerToHeight(mDraggerHeight);
-                } else {
-                    animatePlayerToHeight(mPlayerHeight);
+            if (Math.abs(mDragVelocity) < MIN_DRAG_VELOCITY) {
+                if (mBottomSheetState == BOTTOM_SHEET_STATE_SHOWN) {
+                    if (getPlayerPeekHeight() < mPlayerHeight / 2) {
+                        animatePlayerToHeight(mDraggerHeight);
+                    } else {
+                        animatePlayerToHeight(mPlayerHeight);
+                    }
+                } else if (mBottomSheetState == BOTTOM_SHEET_STATE_HIDDEN) {
+                    animatePlayerToHeight(0);
                 }
-            } else if (mBottomSheetState == BOTTOM_SHEET_STATE_HIDDEN) {
-                animatePlayerToHeight(0);
+            } else {
+                if (mBottomSheetState == BOTTOM_SHEET_STATE_SHOWN) {
+                    if (mDragVelocity > 0) {
+                        animatePlayerToHeight(mDraggerHeight);
+                    } else {
+                        animatePlayerToHeight(mPlayerHeight);
+                    }
+                } else if (mBottomSheetState == BOTTOM_SHEET_STATE_HIDDEN) {
+                    animatePlayerToHeight(0);
+                }
             }
         }
 
@@ -292,5 +301,21 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onAnimationRepeat(Animator animation) {
 
+    }
+
+    @Override
+    public void onLayoutChange(View v, int l, int t, int r, int b, int ol, int ot, int or, int ob) {
+        if (v == bottomSheetView) {
+            mDraggerHeight = dragger.getMeasuredHeight();
+            int newPlayerHeight = b - t;
+            if (mPlayerHeight != newPlayerHeight) {
+                mPlayerHeight = newPlayerHeight;
+                if (mBottomSheetState == BOTTOM_SHEET_STATE_SHOWN) {
+                    setPlayerPeekHeight(mPlayerHeight);
+                } else if (mBottomSheetState == BOTTOM_SHEET_STATE_HIDDEN) {
+                    setPlayerPeekHeight(0);
+                }
+            }
+        }
     }
 }
