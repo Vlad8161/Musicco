@@ -1,9 +1,11 @@
 package mmss.musicco.core;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.util.Log;
 
 import java.io.IOException;
@@ -314,6 +316,15 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
         } else {
             return 0;
         }
+    }
+
+    public void enableWakeLock(Context context) {
+        mPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
+        mPlayer.awake
+    }
+
+    public void disableWakeLock(Context context) {
+        mPlayer.
     }
 
     private void notifyPosChanged() {

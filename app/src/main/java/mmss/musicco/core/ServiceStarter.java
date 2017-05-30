@@ -1,0 +1,23 @@
+package mmss.musicco.core;
+
+import android.content.Context;
+import android.content.Intent;
+
+import mmss.musicco.ui.services.PlayerService;
+
+/**
+ * Created by vlad on 5/30/17.
+ */
+
+public class ServiceStarter {
+    private Context mContext;
+    private MusiccoPlayer mPlayer;
+
+    public ServiceStarter(Context context, MusiccoPlayer musiccoPlayer) {
+        this.mContext = context;
+        this.mPlayer = musiccoPlayer;
+        mPlayer.getStateObservable().subscribe((state) -> {
+            mContext.startService(new Intent(mContext, PlayerService.class));
+        });
+    }
+}
