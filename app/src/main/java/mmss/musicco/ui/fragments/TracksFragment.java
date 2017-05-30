@@ -25,24 +25,31 @@ import mmss.musicco.ui.adapters.TracksAdapter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by User on 12.10.2016.
  */
 
-public class TracksFragment extends Fragment implements AdapterView.OnItemClickListener, MusiccoPlayer.OnTrackChangedListener, MusiccoPlayer.OnStateChangedListener {
-    @BindView(R.id.fragment_tracks_view_list)
-    public ListView lvTracks;
-    @BindView(R.id.fragment_tracks_view_progress)
-    public View viewProgress;
-    @BindView(R.id.fragment_tracks_view_message)
-    public TextView viewMessage;
+public class TracksFragment extends Fragment implements AdapterView.OnItemClickListener {
+
     @Inject
     public MusiccoPlayer musiccoPlayer;
+
+    @BindView(R.id.fragment_tracks_view_list)
+    public ListView lvTracks;
+
+    @BindView(R.id.fragment_tracks_view_progress)
+    public View viewProgress;
+
+    @BindView(R.id.fragment_tracks_view_message)
+    public TextView viewMessage;
+
     private Observable<List<Track>> observableTracks;
-    private Subscription subscription;
+    private Subscription mLoadingSubscription;
     private TracksAdapter adapter;
     private List<Track> mTracks = null;
+    private CompositeSubscription mSubscription = new CompositeSubscription();
 
     public static TracksFragment create(Observable<List<Track>> observableTracks) {
         if (observableTracks == null) {
@@ -63,16 +70,15 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
         adapter = new TracksAdapter(getActivity().getApplicationContext(), musiccoPlayer);
         lvTracks.setAdapter(adapter);
         lvTracks.setOnItemClickListener(this);
-        musiccoPlayer.addOnTrackChangedListener(this);
-        musiccoPlayer.addOnStateChangedListener(this);
+        mSubscription.add(musiccoPlayer.getTrackObservable().subscribe(this::onTrackChanged));
+        mSubscription.add(musiccoPlayer.getStateObservable().subscribe(this::onStateChanged));
         return v;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        musiccoPlayer.removeOnTrackChangedListener(this);
-        musiccoPlayer.removeOnStateChangedListener(this);
+        mSubscription.unsubscribe();
     }
 
     @Override
@@ -90,11 +96,11 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void cancelLoading() {
-        if (subscription != null) {
-            if (subscription.isUnsubscribed()) {
-                subscription.unsubscribe();
+        if (mLoadingSubscription != null) {
+            if (mLoadingSubscription.isUnsubscribed()) {
+                mLoadingSubscription.unsubscribe();
             }
-            subscription = null;
+            mLoadingSubscription = null;
         }
     }
 
@@ -102,10 +108,9 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
         cancelLoading();
 
         lvTracks.setVisibility(View.GONE);
-        viewMessage.setVisibility(View.GONE);
-        viewProgress.setVisibility(View.VISIBLE);
+        viewMessage.setVisibility(View.GONE); viewProgress.setVisibility(View.VISIBLE);
 
-        subscription = observableTracks
+        mLoadingSubscription = observableTracks
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((tracks) -> {
                     mTracks = tracks;
@@ -138,13 +143,11 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
         }
     }
 
-    @Override
-    public void onTrackChangedListener(Track track) {
+    public void onTrackChanged(Track track) {
         adapter.onTrackChanged(track);
     }
 
-    @Override
-    public void onStateChangedListener(int state) {
+    public void onStateChanged(int state) {
         adapter.notifyDataSetChanged();
     }
 }

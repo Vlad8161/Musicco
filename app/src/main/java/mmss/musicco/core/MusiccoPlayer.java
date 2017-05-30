@@ -1,6 +1,5 @@
 package mmss.musicco.core;
 
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -12,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mmss.musicco.dataobjects.Track;
+import rx.Observable;
+import rx.Observer;
+import rx.subjects.BehaviorSubject;
 
 /**
  * Created by User on 27.01.2017.
@@ -37,10 +39,10 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
     private static final int INTERNAL_STATE_END = 9;
 
     private static final String TAG = "MusiccoPlayer";
-    private final List<OnStateChangedListener> mStateChangedListeners = new ArrayList<>();
-    private final List<OnPosChangedListener> mPosChangedListeners = new ArrayList<>();
-    private final List<OnTrackChangedListener> mTrackChangedListeners = new ArrayList<>();
-    private Context mContext;
+    private final BehaviorSubject<Integer> mStateSubject = BehaviorSubject.create();
+    private final BehaviorSubject<Integer> mPositionSubject = BehaviorSubject.create();
+    private final BehaviorSubject<Integer> mDurationSubject = BehaviorSubject.create();
+    private final BehaviorSubject<Track> mTrackSubject = BehaviorSubject.create();
     private MediaPlayer mPlayer;
     private Track mCurrentTrack;
     private Integer mCurrentTrackIndex;
@@ -57,8 +59,7 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
         }
     };
 
-    public MusiccoPlayer(Context context) {
-        this.mContext = context;
+    public MusiccoPlayer() {
         this.mPlayer = new MediaPlayer();
         mPlayer.setOnPreparedListener(this);
         mPlayer.setOnSeekCompleteListener(this);
@@ -71,6 +72,27 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
         while (thread.getLooper() == null) ;
         mBackgroundHandler = new Handler(thread.getLooper());
         mUiHandler = new Handler(Looper.getMainLooper());
+
+        mStateSubject.onNext(getState());
+        mPositionSubject.onNext(getCurrentPosition());
+        mDurationSubject.onNext(getDuration());
+        mTrackSubject.onNext(getCurrentTrack());
+    }
+
+    public Observable<Integer> getStateObservable() {
+        return mStateSubject;
+    }
+
+    public Observable<Integer> getPositionObservable() {
+        return mPositionSubject;
+    }
+
+    public Observable<Integer> getDurationObservable() {
+        return mDurationSubject;
+    }
+
+    public Observable<Track> getTrackObservable() {
+        return mTrackSubject;
     }
 
     public void playTrack(Integer trackIndex) {
@@ -93,6 +115,14 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
         }
     }
 
+    public List<Track> getTracks() {
+        if (mCurrentTrackList != null) {
+            return new ArrayList<>(mCurrentTrackList);
+        } else {
+            return null;
+        }
+    }
+
     public void setTracks(List<Track> tracks) {
         mPlayer.reset();
         setInternalState(INTERNAL_STATE_IDLE);
@@ -103,14 +133,6 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
             setCurrentTrack(null);
         } else {
             setCurrentTrack(0);
-        }
-    }
-
-    public List<Track> getTracks() {
-        if (mCurrentTrackList != null) {
-            return new ArrayList<>(mCurrentTrackList);
-        } else {
-            return null;
         }
     }
 
@@ -198,9 +220,7 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
             int prevState = getState();
             mInternalState = state;
             int nextState = getState();
-            for (OnStateChangedListener listener : mStateChangedListeners) {
-                listener.onStateChangedListener(getState());
-            }
+            mStateSubject.onNext(getState());
 
             if (prevState != nextState) {
                 if (nextState == STATE_PLAYING) {
@@ -266,9 +286,7 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
 
         if (track != mCurrentTrack) {
             mCurrentTrack = track;
-            for (OnTrackChangedListener listener : mTrackChangedListeners) {
-                listener.onTrackChangedListener(mCurrentTrack);
-            }
+            mTrackSubject.onNext(mCurrentTrack);
         }
     }
 
@@ -298,48 +316,9 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
         }
     }
 
-    public void addOnStateChangedListener(OnStateChangedListener listener) {
-        if (!mStateChangedListeners.contains(listener)) {
-            mStateChangedListeners.add(listener);
-        }
-    }
-
-    public void removeOnStateChangedListener(OnStateChangedListener listener) {
-        if (mStateChangedListeners.contains(listener)) {
-            mStateChangedListeners.remove(listener);
-        }
-    }
-
-    public void addOnPosChangedListener(OnPosChangedListener listener) {
-        if (!mPosChangedListeners.contains(listener)) {
-            mPosChangedListeners.add(listener);
-        }
-    }
-
-    public void removeOnPosChangedListener(OnPosChangedListener listener) {
-        if (mPosChangedListeners.contains(listener)) {
-            mPosChangedListeners.remove(listener);
-        }
-    }
-
-    public void addOnTrackChangedListener(OnTrackChangedListener listener) {
-        if (!mTrackChangedListeners.contains(listener)) {
-            mTrackChangedListeners.add(listener);
-        }
-    }
-
-    public void removeOnTrackChangedListener(OnTrackChangedListener listener) {
-        if (mTrackChangedListeners.contains(listener)) {
-            mTrackChangedListeners.remove(listener);
-        }
-    }
-
-    public void notifyPosChanged() {
-        int dur = getDuration();
-        int pos = getCurrentPosition();
-        for (OnPosChangedListener listener : mPosChangedListeners) {
-            listener.onPosChangedListener(pos, dur);
-        }
+    private void notifyPosChanged() {
+        mPositionSubject.onNext(getCurrentPosition());
+        mDurationSubject.onNext(getDuration());
     }
 
     @Override
@@ -368,17 +347,5 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
     @Override
     public void onSeekComplete(MediaPlayer mp) {
 
-    }
-
-    public interface OnStateChangedListener {
-        void onStateChangedListener(int state);
-    }
-
-    public interface OnPosChangedListener {
-        void onPosChangedListener(int pos, int dur);
-    }
-
-    public interface OnTrackChangedListener {
-        void onTrackChangedListener(Track track);
     }
 }

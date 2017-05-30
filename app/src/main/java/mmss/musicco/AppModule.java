@@ -36,7 +36,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public MusiccoPlayer provideMusiccoPlayer(Context context) {
-        return new MusiccoPlayer(context);
+    public MusiccoPlayer provideMusiccoPlayer() {
+        return new MusiccoPlayer();
     }
 }

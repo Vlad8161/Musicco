@@ -18,13 +18,13 @@ import mmss.musicco.App;
 import mmss.musicco.R;
 import mmss.musicco.core.MusiccoPlayer;
 import mmss.musicco.dataobjects.Track;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by User on 12.10.2016.
  */
 
-public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackChangedListener, MusiccoPlayer.OnPosChangedListener, MusiccoPlayer.OnStateChangedListener {
-
+public class PlayerFragment extends Fragment {
     @Inject
     MusiccoPlayer musiccoPlayer;
 
@@ -55,6 +55,8 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
     @BindView(R.id.fragment_player_tv_max_pos)
     TextView tvMaxPos;
 
+    private CompositeSubscription mSubscription = new CompositeSubscription();
+
     private SeekBar.OnSeekBarChangeListener seekBarListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -81,9 +83,11 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
         View root = inflater.inflate(R.layout.fragment_player, null);
         ButterKnife.bind(this, root);
         App.getApp().inject(this);
-        musiccoPlayer.addOnTrackChangedListener(this);
-        musiccoPlayer.addOnPosChangedListener(this);
-        musiccoPlayer.addOnStateChangedListener(this);
+
+        mSubscription.add(musiccoPlayer.getTrackObservable().subscribe(this::onTrackChanged));
+        mSubscription.add(musiccoPlayer.getPositionObservable().subscribe(this::onPosChanged));
+        mSubscription.add(musiccoPlayer.getDurationObservable().subscribe(this::onDurChanged));
+        mSubscription.add(musiccoPlayer.getStateObservable().subscribe(this::onStateChanged));
         seekBar.setOnSeekBarChangeListener(seekBarListener);
 
         if (musiccoPlayer.getState() == MusiccoPlayer.STATE_PLAYING) {
@@ -127,13 +131,10 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        musiccoPlayer.removeOnTrackChangedListener(this);
-        musiccoPlayer.removeOnPosChangedListener(this);
-        musiccoPlayer.removeOnStateChangedListener(this);
+        mSubscription.unsubscribe();
     }
 
-    @Override
-    public void onTrackChangedListener(Track track) {
+    public void onTrackChanged(Track track) {
         String trackName;
         String artistName;
         if (track != null && track.name != null) {
@@ -157,22 +158,27 @@ public class PlayerFragment extends Fragment implements MusiccoPlayer.OnTrackCha
         }
     }
 
-    @Override
-    public void onPosChangedListener(int pos, int dur) {
+    public void onPosChanged(int pos) {
         if (!userMovingSeekBar) {
-            seekBar.setMax(dur);
             seekBar.setProgress(pos);
         }
+
         int currMins = pos / 60000;
         int currSecs = (int) ((pos / 1000f) % 60);
         tvCurrPos.setText(String.format("%02d:%02d", currMins, currSecs));
+    }
+
+    public void onDurChanged(int dur) {
+        if (!userMovingSeekBar) {
+            seekBar.setMax(dur);
+        }
+
         int maxMins = dur / 60000;
         int maxSecs = (int) ((dur / 1000f) % 60);
         tvMaxPos.setText(String.format("%02d:%02d", maxMins, maxSecs));
     }
 
-    @Override
-    public void onStateChangedListener(int state) {
+    public void onStateChanged(int state) {
         if (state == MusiccoPlayer.STATE_PLAYING) {
             seekBar.setEnabled(true);
             btnPlay.setVisibility(View.INVISIBLE);

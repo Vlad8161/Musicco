@@ -33,9 +33,10 @@ import mmss.musicco.ui.fragments.AlbumsFragment;
 import mmss.musicco.ui.fragments.ArtistsFragment;
 import mmss.musicco.ui.fragments.TracksFragment;
 import rx.Observable;
+import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener, MusiccoPlayer.OnTrackChangedListener,
+        NavigationView.OnNavigationItemSelectedListener,
         OnShowTracksListener, View.OnTouchListener, ValueAnimator.AnimatorUpdateListener,
         Animator.AnimatorListener, View.OnLayoutChangeListener {
     private static final String TAG = "MainActivity";
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements
     private int mDragVelocity;
     private boolean isDraggingNow = false;
     private ValueAnimator mBottomSheetAnimator = null;
+    private CompositeSubscription mSubscription = new CompositeSubscription();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,14 +110,15 @@ public class MainActivity extends AppCompatActivity implements
 
         bottomSheetView.setOnTouchListener(this);
         bottomSheetView.addOnLayoutChangeListener(this);
-        musiccoPlayer.addOnTrackChangedListener(this);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mSubscription.add(musiccoPlayer.getTrackObservable().subscribe(this::onTrackChanged));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        musiccoPlayer.removeOnTrackChangedListener(this);
+        mSubscription.unsubscribe();
         bottomSheetView.removeOnLayoutChangeListener(this);
     }
 
@@ -169,8 +172,7 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-    @Override
-    public void onTrackChangedListener(Track track) {
+    public void onTrackChanged(Track track) {
         if (track != null) {
             showPlayer();
         } else {
