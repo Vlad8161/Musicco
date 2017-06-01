@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import mmss.musicco.core.MusiccoPlayer;
+import mmss.musicco.core.ServiceStarter;
 import mmss.musicco.models.TracksRepo;
 
 /**
@@ -17,6 +18,7 @@ import mmss.musicco.models.TracksRepo;
 public class AppModule {
 
     private Context mContext;
+    private ServiceStarter mStarter;
 
     public AppModule(Context context) {
         this.mContext = context;
@@ -36,7 +38,9 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public MusiccoPlayer provideMusiccoPlayer() {
-        return new MusiccoPlayer();
+    public MusiccoPlayer provideMusiccoPlayer(Context context) {
+        MusiccoPlayer player = new MusiccoPlayer(context);
+        mStarter = new ServiceStarter(context, player);
+        return player;
     }
 }

@@ -13,4 +13,5 @@
     <string name="tracks_repo_album_unknown">Неизвестный альбом</string>
 
     <string name="fragment_artists_lv_item_tv_tracks_count_label_text">Композиций:</string>
+    <string name="foreground_notification_ticker">Musicco</string>
 </resources>

@@ -14,7 +14,6 @@ import java.util.List;
 
 import mmss.musicco.dataobjects.Track;
 import rx.Observable;
-import rx.Observer;
 import rx.subjects.BehaviorSubject;
 
 /**
@@ -61,13 +60,14 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
         }
     };
 
-    public MusiccoPlayer() {
+    public MusiccoPlayer(Context context) {
         this.mPlayer = new MediaPlayer();
         mPlayer.setOnPreparedListener(this);
         mPlayer.setOnSeekCompleteListener(this);
         mPlayer.setOnCompletionListener(this);
         mPlayer.setOnErrorListener(this);
         mPlayer.setLooping(false);
+        mPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
 
         HandlerThread thread = new HandlerThread("MusiccoPlayerThread");
         thread.start();
@@ -222,9 +222,9 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
             int prevState = getState();
             mInternalState = state;
             int nextState = getState();
-            mStateSubject.onNext(getState());
 
             if (prevState != nextState) {
+                mStateSubject.onNext(getState());
                 if (nextState == STATE_PLAYING) {
                     mBackgroundHandler.postDelayed(mUpdater, 500);
                     notifyPosChanged();
@@ -316,15 +316,6 @@ public class MusiccoPlayer implements MediaPlayer.OnPreparedListener,
         } else {
             return 0;
         }
-    }
-
-    public void enableWakeLock(Context context) {
-        mPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
-        mPlayer.awake
-    }
-
-    public void disableWakeLock(Context context) {
-        mPlayer.
     }
 
     private void notifyPosChanged() {
