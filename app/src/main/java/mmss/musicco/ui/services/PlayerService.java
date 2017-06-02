@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Icon;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -16,6 +15,7 @@ import mmss.musicco.App;
 import mmss.musicco.R;
 import mmss.musicco.core.MusiccoPlayer;
 import mmss.musicco.dataobjects.Track;
+import mmss.musicco.ui.activities.MainActivity;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -62,6 +62,12 @@ public class PlayerService extends Service {
     private void showStatus() {
         int state = mPlayer.getState();
         if (state != MusiccoPlayer.STATE_STOPPED) {
+            Notification.Builder nb = new Notification.Builder(this)
+                    .setTicker(getResources().getString(R.string.foreground_notification_ticker))
+                    .setWhen(System.currentTimeMillis())
+                    .setSmallIcon(R.drawable.ic_service_small_icon)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_service_large_icon));
+
             Track track = mPlayer.getCurrentTrack();
             String trackName;
             String artistName;
@@ -75,39 +81,39 @@ public class PlayerService extends Service {
             } else {
                 artistName = getResources().getString(R.string.tracks_repo_artist_unknown);
             }
-
-            Intent playIntent = new Intent(this, PlayerService.class);
-            playIntent.setAction(ACTION_PLAY);
-            PendingIntent playPendingIntent = PendingIntent.getService(this, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            //Intent pauseIntent = new Intent(this, PlayerService.class);
-            //pauseIntent.setAction(ACTION_PAUSE);
-            //PendingIntent pausePendingIntent = PendingIntent.getService(this, 0, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Intent nextIntent = new Intent(this, PlayerService.class);
-            nextIntent.setAction(ACTION_NEXT);
-            PendingIntent nextPendingIntent = PendingIntent.getService(this, 0, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            nb.setContentTitle(trackName);
+            nb.setContentText(artistName);
 
             Intent prevIntent = new Intent(this, PlayerService.class);
             prevIntent.setAction(ACTION_PREV);
             PendingIntent prevPendingIntent = PendingIntent.getService(this, 0, prevIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            nb.addAction(R.drawable.ic_service_prev, "", prevPendingIntent);
 
-            Notification n = new Notification.Builder(this)
-                    .setContentTitle(trackName)
-                    .setContentText(artistName)
-                    .setTicker(getResources().getString(R.string.foreground_notification_ticker))
-                    .setWhen(System.currentTimeMillis())
-                    .addAction(R.drawable.ic_prev, "", prevPendingIntent)
-                    .addAction(R.drawable.ic_play, "", playPendingIntent)
-                    .addAction(R.drawable.ic_next, "", nextPendingIntent)
-                    .setSmallIcon(R.drawable.ic_service_small_icon)
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_service_large_icon))
-                    .build();
-            startForeground(FOREGROUND_ID, n);
+            if (state == MusiccoPlayer.STATE_PLAYING) {
+                Intent pauseIntent = new Intent(this, PlayerService.class);
+                pauseIntent.setAction(ACTION_PAUSE);
+                PendingIntent pausePendingIntent = PendingIntent.getService(this, 0, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                nb.addAction(R.drawable.ic_service_pause, "", pausePendingIntent);
+            } else {
+                Intent playIntent = new Intent(this, PlayerService.class);
+                playIntent.setAction(ACTION_PLAY);
+                PendingIntent playPendingIntent = PendingIntent.getService(this, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                nb.addAction(R.drawable.ic_service_play, "", playPendingIntent);
+            }
+
+            Intent nextIntent = new Intent(this, PlayerService.class);
+            nextIntent.setAction(ACTION_NEXT);
+            PendingIntent nextPendingIntent = PendingIntent.getService(this, 0, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            nb.addAction(R.drawable.ic_service_next, "", nextPendingIntent);
+
+            Intent mainActivityIntent = new Intent(this, MainActivity.class);
+            PendingIntent mainActivityPendingIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            nb.setContentIntent(mainActivityPendingIntent);
+
+            startForeground(FOREGROUND_ID, nb.build());
         } else {
             stopForeground(true);
         }
-
     }
 
     @Override
