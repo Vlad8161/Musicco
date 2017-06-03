@@ -27,6 +27,7 @@ public class PlayerService extends Service {
     private static int FOREGROUND_ID = 123;
     private static String ACTION_PLAY = "service_action_play";
     private static String ACTION_PAUSE = "service_action_pause";
+    private static String ACTION_STOP = "service_action_stop";
     private static String ACTION_NEXT = "service_action_next";
     private static String ACTION_PREV = "service_action_prev";
 
@@ -106,6 +107,14 @@ public class PlayerService extends Service {
             PendingIntent nextPendingIntent = PendingIntent.getService(this, 0, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             nb.addAction(R.drawable.ic_service_next, "", nextPendingIntent);
 
+/*
+            //TODO: Полная остановка воспроизведения. Пока не реализована т.к. в Notification не может быть больше 3х действий
+            Intent stopIntent = new Intent(this, PlayerService.class);
+            stopIntent.setAction(ACTION_STOP);
+            PendingIntent stopPendingIntent = PendingIntent.getService(this, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            nb.addAction(R.drawable.ic_service_stop, "", stopPendingIntent);
+*/
+
             Intent mainActivityIntent = new Intent(this, MainActivity.class);
             PendingIntent mainActivityPendingIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             nb.setContentIntent(mainActivityPendingIntent);
@@ -125,6 +134,8 @@ public class PlayerService extends Service {
                     mPlayer.play();
                 } else if (action.equals(ACTION_PAUSE)) {
                     mPlayer.pause();
+                } else if (action.equals(ACTION_STOP)) {
+                    mPlayer.stop();
                 } else if (action.equals(ACTION_NEXT)) {
                     mPlayer.nextTrack();
                 } else if (action.equals(ACTION_PREV)) {
