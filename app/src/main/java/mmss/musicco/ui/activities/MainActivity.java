@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
         toggle.syncState();
 
         FragmentManager fm = getFragmentManager();
-        Observable<List<Track>> obsTracks = tracksRepo.getAllTracks();
+        Observable<List<Track>> obsTracks = tracksRepo.getAllTracks().toList();
         fm.beginTransaction()
                 .replace(R.id.content_main_container, TracksFragment.create(obsTracks))
                 .commit();
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.nav_tracks) {
-            Fragment f = TracksFragment.create(tracksRepo.getAllTracks());
+            Fragment f = TracksFragment.create(tracksRepo.getAllTracks().toList());
             FragmentManager fm = getFragmentManager();
             fm.beginTransaction().replace(R.id.content_main_container, f).commit();
         } else if (id == R.id.nav_albums) {
@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 FragmentManager fm = getFragmentManager();
-                Observable<List<Track>> obsTracks = tracksRepo.getAllTracks();
+                Observable<List<Track>> obsTracks = tracksRepo.getAllTracks().toList();
                 fm.beginTransaction()
                         .replace(R.id.content_main_container, TracksFragment.create(obsTracks))
                         .commit();
@@ -318,6 +318,7 @@ public class MainActivity extends AppCompatActivity implements
                     animatePlayerToHeight(mDraggerHeight);
                 }
             } else {
+                isDraggingNow = false;
                 animatePlayerToHeight(0);
             }
         }

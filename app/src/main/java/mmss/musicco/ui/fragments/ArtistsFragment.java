@@ -89,7 +89,7 @@ public class ArtistsFragment extends Fragment implements AdapterView.OnItemClick
 
         Artist artist = (Artist) adapter.getItem(i);
         if (artist != null) {
-            showTracksListener.onShowTracks(tracksRepo.getArtistTracks(artist.name));
+            showTracksListener.onShowTracks(tracksRepo.getArtistTracks(artist.name).toList());
         }
     }
 

@@ -86,7 +86,7 @@ public class AlbumsFragment extends Fragment implements AdapterView.OnItemClickL
 
         Album album = (Album) adapter.getItem(i);
         if (album != null) {
-            showTracksListener.onShowTracks(tracksRepo.getAlbumTracks(album.artist, album.name));
+            showTracksListener.onShowTracks(tracksRepo.getAlbumTracks(album.artist, album.name).toList());
         }
     }
 

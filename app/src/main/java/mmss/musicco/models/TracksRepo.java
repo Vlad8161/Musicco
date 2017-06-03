@@ -16,6 +16,7 @@ import org.jaudiotagger.tag.TagException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import mmss.musicco.dataobjects.Album;
@@ -35,50 +36,47 @@ public class TracksRepo {
         this.mContext = context;
     }
 
-    public Observable<List<Track>> getAllTracks() {
-        return Observable.fromCallable(() -> {
-            List<Track> retVal = new ArrayList<>();
+    public Observable<Track> getAllTracks() {
+        if (!isExternalStorageReadable()) {
+            return Observable.empty();
+        }
 
-            if (!isExternalStorageReadable()) {
-                return retVal;
+        File musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+        if (musicDir == null) {
+            return Observable.empty();
+        }
+
+        if (musicDir.exists()) {
+            if (!musicDir.isDirectory()) {
+                return Observable.empty();
             }
-
-            File musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-            if (musicDir == null) {
-                return retVal;
+        } else {
+            if (!musicDir.mkdir()) {
+                return Observable.empty();
             }
+        }
 
-            if (musicDir.exists()) {
-                if (!musicDir.isDirectory()) {
-                    return retVal;
-                }
-            } else {
-                if (!musicDir.mkdir()) {
-                    return retVal;
-                }
-            }
+        File[] filesList = musicDir.listFiles();
+        if (filesList == null) {
+            return Observable.empty();
+        }
 
-            File[] filesList = musicDir.listFiles();
-            if (filesList == null) {
-                return retVal;
-            }
-
-            for (File f : musicDir.listFiles()) {
-                if (f.isDirectory()) {
-                    continue;
-                }
-
-                if (f.getName().endsWith(".mp3")) {
-                    Track t = extractTrack(f);
-                    if (t != null) {
-                        retVal.add(t);
-                    }
-                }
-            }
-
-            return retVal;
-        })
+        return Observable.from(Arrays.asList(musicDir.listFiles()))
+                .filter((f) -> !f.isDirectory())
+                .filter((f) -> f.getName().endsWith(".mp3"))
+                .map(this::extractTrack)
+                .filter((t) -> t != null)
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Track> getArtistTracks(String artist) {
+        return getAllTracks()
+                .filter((t) -> t.artist == null && artist == null || t.artist != null && artist != null && t.artist.equals(artist));
+    }
+
+    public Observable<Track> getAlbumTracks(String artist, String album) {
+        return getArtistTracks(artist)
+                .filter((t) -> t.album == null && album == null || t.album != null && album != null && t.artist.equals(album));
     }
 
     public Observable<List<Album>> getAllAlbums() {
@@ -215,124 +213,6 @@ public class TracksRepo {
                 if (!found) {
                     Artist artist = new Artist(track.artist, 1);
                     retVal.add(artist);
-                }
-            }
-
-            return retVal;
-        })
-                .subscribeOn(Schedulers.io());
-    }
-
-    public Observable<List<Track>> getArtistTracks(String artist) {
-        return Observable.fromCallable(() -> {
-            List<Track> retVal = new ArrayList<>();
-
-            if (!isExternalStorageReadable()) {
-                return retVal;
-            }
-
-            File musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-            if (musicDir == null) {
-                return retVal;
-            }
-
-            if (musicDir.exists()) {
-                if (!musicDir.isDirectory()) {
-                    return retVal;
-                }
-            } else {
-                if (!musicDir.mkdir()) {
-                    return retVal;
-                }
-            }
-
-            File[] filesList = musicDir.listFiles();
-            if (filesList == null) {
-                return retVal;
-            }
-
-            for (File f : musicDir.listFiles()) {
-                if (f.isDirectory()) {
-                    continue;
-                }
-
-                if (!f.getName().endsWith(".mp3")) {
-                    continue;
-                }
-
-                Track track = extractTrack(f);
-                if (track == null) {
-                    continue;
-                }
-
-                if (track.artist == null && artist == null) {
-                    retVal.add(track);
-                } else if (track.artist != null && artist != null && track.artist.equals(artist)) {
-                    retVal.add(track);
-                }
-            }
-
-            return retVal;
-        })
-                .subscribeOn(Schedulers.io());
-    }
-
-    public Observable<List<Track>> getAlbumTracks(String artist, String album) {
-        return Observable.fromCallable(() -> {
-            List<Track> retVal = new ArrayList<>();
-
-            if (!isExternalStorageReadable()) {
-                return retVal;
-            }
-
-            File musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-            if (musicDir == null) {
-                return retVal;
-            }
-
-            if (musicDir.exists()) {
-                if (!musicDir.isDirectory()) {
-                    return retVal;
-                }
-            } else {
-                if (!musicDir.mkdir()) {
-                    return retVal;
-                }
-            }
-
-            File[] filesList = musicDir.listFiles();
-            if (filesList == null) {
-                return retVal;
-            }
-
-            for (File f : musicDir.listFiles()) {
-                if (f.isDirectory()) {
-                    continue;
-                }
-
-                if (!f.getName().endsWith(".mp3")) {
-                    continue;
-                }
-
-                Track track = extractTrack(f);
-                if (track == null) {
-                    continue;
-                }
-
-                boolean artistEquals = false;
-                if ((track.artist == null && artist == null) ||
-                        (track.artist != null && artist != null && track.artist.equals(artist))) {
-                    artistEquals = true;
-                }
-
-                boolean albumEquals = false;
-                if ((track.album == null && album == null) ||
-                        (track.album != null && album != null && track.album.equals(album))) {
-                    albumEquals = true;
-                }
-
-                if (artistEquals && albumEquals) {
-                    retVal.add(track);
                 }
             }
 
