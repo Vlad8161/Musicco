@@ -58,6 +58,11 @@ public class TracksRepo {
                 }
             }
 
+            File[] filesList = musicDir.listFiles();
+            if (filesList == null) {
+                return retVal;
+            }
+
             for (File f : musicDir.listFiles()) {
                 if (f.isDirectory()) {
                     continue;
@@ -97,6 +102,11 @@ public class TracksRepo {
                 if (!musicDir.mkdir()) {
                     return retVal;
                 }
+            }
+
+            File[] filesList = musicDir.listFiles();
+            if (filesList == null) {
+                return retVal;
             }
 
             for (File f : musicDir.listFiles()) {
@@ -172,6 +182,11 @@ public class TracksRepo {
                 }
             }
 
+            File[] filesList = musicDir.listFiles();
+            if (filesList == null) {
+                return retVal;
+            }
+
             for (File f : musicDir.listFiles()) {
                 if (f.isDirectory()) {
                     continue;
@@ -231,6 +246,11 @@ public class TracksRepo {
                 }
             }
 
+            File[] filesList = musicDir.listFiles();
+            if (filesList == null) {
+                return retVal;
+            }
+
             for (File f : musicDir.listFiles()) {
                 if (f.isDirectory()) {
                     continue;
@@ -278,6 +298,11 @@ public class TracksRepo {
                 if (!musicDir.mkdir()) {
                     return retVal;
                 }
+            }
+
+            File[] filesList = musicDir.listFiles();
+            if (filesList == null) {
+                return retVal;
             }
 
             for (File f : musicDir.listFiles()) {

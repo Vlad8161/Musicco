@@ -1,12 +1,17 @@
 package mmss.musicco.ui.activities;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final int BOTTOM_SHEET_STATE_HIDDEN = 0;
     private static final int BOTTOM_SHEET_STATE_SHOWN = 1;
     private static final int MIN_DRAG_VELOCITY = 4;
+    private static final int PERMISSION_REQUEST_CODE = 10;
 
     @Inject
     TracksRepo tracksRepo;
@@ -130,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             navigationView.getMenu().findItem(R.id.nav_current_track_list).setVisible(false);
         }
+
+        requestStoragePermissions();
     }
 
     @Override
@@ -317,6 +325,29 @@ public class MainActivity extends AppCompatActivity implements
                 } else if (mBottomSheetState == BOTTOM_SHEET_STATE_HIDDEN) {
                     setPlayerPeekHeight(0);
                 }
+            }
+        }
+    }
+
+    private void requestStoragePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int perm = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+            if (perm != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        PERMISSION_REQUEST_CODE);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                FragmentManager fm = getFragmentManager();
+                Observable<List<Track>> obsTracks = tracksRepo.getAllTracks();
+                fm.beginTransaction()
+                        .replace(R.id.content_main_container, TracksFragment.create(obsTracks))
+                        .commit();
             }
         }
     }
