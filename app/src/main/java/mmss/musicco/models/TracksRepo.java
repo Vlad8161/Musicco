@@ -14,13 +14,19 @@ import org.jaudiotagger.tag.TagException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import mmss.musicco.dataobjects.Album;
 import mmss.musicco.dataobjects.Artist;
 import mmss.musicco.dataobjects.Track;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
+import rx.subjects.ReplaySubject;
 
 /**
  * Created by User on 12.10.2016.
@@ -32,7 +38,7 @@ public class TracksRepo {
             return Observable.empty();
         }
 
-        File musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+        File musicDir = Environment.getExternalStorageDirectory();
         if (musicDir == null) {
             return Observable.empty();
         }
@@ -52,7 +58,7 @@ public class TracksRepo {
             return Observable.empty();
         }
 
-        return Observable.from(Arrays.asList(musicDir.listFiles()))
+        return Observable.defer(() -> Observable.from(recurseListFiles(musicDir)))
                 .filter((f) -> !f.isDirectory())
                 .filter((f) -> f.getName().endsWith(".mp3"))
                 .map(this::extractTrack)
@@ -67,7 +73,7 @@ public class TracksRepo {
 
     public Observable<Track> getAlbumTracks(String artist, String album) {
         return getArtistTracks(artist)
-                .filter((t) -> t.album == null && album == null || t.album != null && album != null && t.artist.equals(album));
+                .filter((t) -> t.album == null && album == null || t.album != null && album != null && t.artist.equals(artist));
     }
 
     public Observable<Artist> getAllArtists() {
@@ -157,6 +163,29 @@ public class TracksRepo {
         t.size = f.length();
 
         return t;
+    }
+
+    private List<File> recurseListFiles(File root) {
+        List<File> retVal = new ArrayList<>();
+
+        if (root.isDirectory()) {
+            File[] content = root.listFiles();
+            if (content != null) {
+                for (File i : content) {
+                    if (i.isDirectory()) {
+                        if (!i.getName().startsWith(".")) {
+                            retVal.addAll(recurseListFiles(i));
+                        }
+                    } else {
+                        retVal.add(i);
+                    }
+                }
+            }
+        } else {
+            retVal.add(root);
+        }
+
+        return retVal;
     }
 
     private static class AlbumKey {
