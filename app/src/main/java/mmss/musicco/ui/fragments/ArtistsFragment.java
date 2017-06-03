@@ -100,7 +100,7 @@ public class ArtistsFragment extends Fragment implements AdapterView.OnItemClick
         progressBar.setVisibility(View.VISIBLE);
         tvMessage.setVisibility(View.GONE);
 
-        subscription = tracksRepo.getAllArtists()
+        subscription = tracksRepo.getAllArtists().toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((artists) -> {
                     if (artists != null && !artists.isEmpty()) {

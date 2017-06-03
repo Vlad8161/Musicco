@@ -97,7 +97,7 @@ public class AlbumsFragment extends Fragment implements AdapterView.OnItemClickL
         pbProgress.setVisibility(View.VISIBLE);
         tvMessage.setVisibility(View.GONE);
 
-        subscription = tracksRepo.getAllAlbums()
+        subscription = tracksRepo.getAllAlbums().toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((albums) -> {
                     if (albums != null && !albums.isEmpty()) {

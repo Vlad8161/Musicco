@@ -1,6 +1,5 @@
 package mmss.musicco.models;
 
-import android.content.Context;
 import android.os.Environment;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -15,9 +14,7 @@ import org.jaudiotagger.tag.TagException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import mmss.musicco.dataobjects.Album;
 import mmss.musicco.dataobjects.Artist;
@@ -30,12 +27,6 @@ import rx.schedulers.Schedulers;
  */
 
 public class TracksRepo {
-    private Context mContext;
-
-    public TracksRepo(Context context) {
-        this.mContext = context;
-    }
-
     public Observable<Track> getAllTracks() {
         if (!isExternalStorageReadable()) {
             return Observable.empty();
@@ -79,146 +70,34 @@ public class TracksRepo {
                 .filter((t) -> t.album == null && album == null || t.album != null && album != null && t.artist.equals(album));
     }
 
-    public Observable<List<Album>> getAllAlbums() {
-        return Observable.fromCallable(() -> {
-            List<Album> retVal = new ArrayList<>();
-
-            if (!isExternalStorageReadable()) {
-                return retVal;
-            }
-
-            File musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-            if (musicDir == null) {
-                return retVal;
-            }
-
-            if (musicDir.exists()) {
-                if (!musicDir.isDirectory()) {
-                    return retVal;
-                }
-            } else {
-                if (!musicDir.mkdir()) {
-                    return retVal;
-                }
-            }
-
-            File[] filesList = musicDir.listFiles();
-            if (filesList == null) {
-                return retVal;
-            }
-
-            for (File f : musicDir.listFiles()) {
-                if (f.isDirectory()) {
-                    continue;
-                }
-
-                if (!f.getName().endsWith(".mp3")) {
-                    continue;
-                }
-
-                Track track = extractTrack(f);
-                if (track == null) {
-                    continue;
-                }
-
-                boolean found = false;
-                for (Album album : retVal) {
-
-                    if ((album.artist != null && track.artist == null) ||
-                            (album.artist == null && track.artist != null)) {
-                        continue;
-                    }
-
-                    if (album.artist != null && track.artist != null && !album.artist.equals(track.artist)) {
-                        continue;
-                    }
-
-                    if ((album.name != null && track.album == null) ||
-                            (album.name == null && track.album != null)) {
-                        continue;
-                    }
-
-                    if (album.name != null && track.album != null && !album.name.equals(track.album)) {
-                        continue;
-                    }
-
-                    album.tracksCount++;
-                    found = true;
-                }
-
-                if (!found) {
-                    Album album = new Album(track.album, track.artist, 1);
-                    retVal.add(album);
-                }
-            }
-
-            return retVal;
-        })
-                .subscribeOn(Schedulers.io());
+    public Observable<Artist> getAllArtists() {
+        return getAllTracks()
+                .groupBy((t) -> t.artist)
+                .flatMap((obs) -> {
+                    Artist accumulator = new Artist();
+                    accumulator.name = obs.getKey();
+                    accumulator.tracksCount = 0;
+                    return obs.reduce(accumulator, (a, t) -> {
+                        a.tracksCount++;
+                        return a;
+                    });
+                });
     }
 
-    public Observable<List<Artist>> getAllArtists() {
-        return Observable.fromCallable(() -> {
-            List<Artist> retVal = new ArrayList<>();
-
-            if (!isExternalStorageReadable()) {
-                return retVal;
-            }
-
-            File musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-            if (musicDir == null) {
-                return retVal;
-            }
-
-            if (musicDir.exists()) {
-                if (!musicDir.isDirectory()) {
-                    return retVal;
-                }
-            } else {
-                if (!musicDir.mkdir()) {
-                    return retVal;
-                }
-            }
-
-            File[] filesList = musicDir.listFiles();
-            if (filesList == null) {
-                return retVal;
-            }
-
-            for (File f : musicDir.listFiles()) {
-                if (f.isDirectory()) {
-                    continue;
-                }
-
-                if (!f.getName().endsWith(".mp3")) {
-                    continue;
-                }
-
-                Track track = extractTrack(f);
-                if (track == null) {
-                    continue;
-                }
-
-                boolean found = false;
-                for (Artist artist : retVal) {
-                    if (track.artist == null && artist.name == null) {
-                        artist.tracksCount++;
-                        found = true;
-                    } else if (track.artist != null && artist.name != null && artist.name.equals(track.artist)) {
-                        artist.tracksCount++;
-                        found = true;
-                    }
-                }
-
-                if (!found) {
-                    Artist artist = new Artist(track.artist, 1);
-                    retVal.add(artist);
-                }
-            }
-
-            return retVal;
-        })
-                .subscribeOn(Schedulers.io());
+    public Observable<Album> getAllAlbums() {
+        return getAllTracks()
+                .groupBy((t) -> new AlbumKey(t.artist, t.album))
+                .flatMap((obs) -> {
+                    Album accumulator = new Album();
+                    AlbumKey key = obs.getKey();
+                    accumulator.artist = key.artist;
+                    accumulator.name = key.album;
+                    accumulator.tracksCount = 0;
+                    return obs.reduce(accumulator, (a, t) -> {
+                        a.tracksCount++;
+                        return a;
+                    });
+                });
     }
 
     /* Checks if external storage is available for read and write */
@@ -278,5 +157,35 @@ public class TracksRepo {
         t.size = f.length();
 
         return t;
+    }
+
+    private static class AlbumKey {
+        String artist;
+        String album;
+
+        AlbumKey(String artist, String album) {
+            this.artist = artist;
+            this.album = album;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            AlbumKey albumKey = (AlbumKey) o;
+
+            if (artist != null ? !artist.equals(albumKey.artist) : albumKey.artist != null)
+                return false;
+            return album != null ? album.equals(albumKey.album) : albumKey.album == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = artist != null ? artist.hashCode() : 0;
+            result = 31 * result + (album != null ? album.hashCode() : 0);
+            return result;
+        }
     }
 }
