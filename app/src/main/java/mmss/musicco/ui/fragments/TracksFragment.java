@@ -108,7 +108,8 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
         cancelLoading();
 
         lvTracks.setVisibility(View.GONE);
-        viewMessage.setVisibility(View.GONE); viewProgress.setVisibility(View.VISIBLE);
+        viewMessage.setVisibility(View.GONE);
+        viewProgress.setVisibility(View.VISIBLE);
 
         mLoadingSubscription = observableTracks
                 .observeOn(AndroidSchedulers.mainThread())

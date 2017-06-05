@@ -21,7 +21,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ import mmss.musicco.App;
 import mmss.musicco.R;
 import mmss.musicco.core.MusiccoPlayer;
 import mmss.musicco.dataobjects.Track;
-import mmss.musicco.models.TracksRepo;
+import mmss.musicco.core.TracksRepo;
 import mmss.musicco.ui.customviews.NotOverlappingBottomSheetLayout;
 import mmss.musicco.ui.fragments.AlbumsFragment;
 import mmss.musicco.ui.fragments.ArtistsFragment;
@@ -226,10 +225,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public static class BottomSheetHelper extends Fragment implements View.OnTouchListener, ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
+        private static final int MIN_DRAG_VELOCITY = 4;
         private static int BOTTOM_SHEET_STATE_SHOWN = 0;
         private static int BOTTOM_SHEET_STATE_COLLAPSED = 1;
-        private static final int MIN_DRAG_VELOCITY = 4;
-
         /* views */
         private View mBottomSheetView;
         private NotOverlappingBottomSheetLayout mBottomSheetLayout;

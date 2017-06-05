@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import mmss.musicco.App;
 import mmss.musicco.R;
 import mmss.musicco.dataobjects.Artist;
-import mmss.musicco.models.TracksRepo;
+import mmss.musicco.core.TracksRepo;
 import mmss.musicco.ui.activities.OnShowTracksListener;
 import mmss.musicco.ui.adapters.ArtistsAdapter;
 import rx.Subscription;
@@ -47,14 +47,14 @@ public class ArtistsFragment extends Fragment implements AdapterView.OnItemClick
     private Subscription subscription;
     private OnShowTracksListener showTracksListener;
 
+    public ArtistsFragment() {
+        App.getApp().inject(this);
+    }
+
     public static ArtistsFragment create(OnShowTracksListener listener) {
         ArtistsFragment f = new ArtistsFragment();
         f.showTracksListener = listener;
         return f;
-    }
-
-    public ArtistsFragment() {
-        App.getApp().inject(this);
     }
 
     @SuppressLint("InflateParams")

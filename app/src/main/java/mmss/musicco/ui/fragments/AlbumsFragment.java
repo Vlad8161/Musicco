@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import mmss.musicco.App;
 import mmss.musicco.R;
 import mmss.musicco.dataobjects.Album;
-import mmss.musicco.models.TracksRepo;
+import mmss.musicco.core.TracksRepo;
 import mmss.musicco.ui.activities.OnShowTracksListener;
 import mmss.musicco.ui.adapters.AlbumsAdapter;
 import rx.Subscription;
@@ -45,14 +45,14 @@ public class AlbumsFragment extends Fragment implements AdapterView.OnItemClickL
     private Subscription subscription;
     private OnShowTracksListener showTracksListener;
 
+    public AlbumsFragment() {
+        App.getApp().inject(this);
+    }
+
     public static AlbumsFragment create(OnShowTracksListener onShowTracksListener) {
         AlbumsFragment f = new AlbumsFragment();
         f.showTracksListener = onShowTracksListener;
         return f;
-    }
-
-    public AlbumsFragment() {
-        App.getApp().inject(this);
     }
 
     @Nullable

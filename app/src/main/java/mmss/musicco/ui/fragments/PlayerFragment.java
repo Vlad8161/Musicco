@@ -56,7 +56,7 @@ public class PlayerFragment extends Fragment {
     TextView tvMaxPos;
 
     private CompositeSubscription mSubscription = new CompositeSubscription();
-
+    private boolean userMovingSeekBar = false;
     private SeekBar.OnSeekBarChangeListener seekBarListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -74,8 +74,6 @@ public class PlayerFragment extends Fragment {
             userMovingSeekBar = false;
         }
     };
-
-    private boolean userMovingSeekBar = false;
 
     @Nullable
     @Override

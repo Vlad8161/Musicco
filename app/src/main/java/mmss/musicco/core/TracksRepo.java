@@ -1,4 +1,4 @@
-package mmss.musicco.models;
+package mmss.musicco.core;
 
 import android.os.Environment;
 
@@ -15,24 +15,30 @@ import org.jaudiotagger.tag.TagException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import mmss.musicco.dao.DaoSession;
+import mmss.musicco.dao.Playlist;
+import mmss.musicco.dao.PlaylistTrack;
+import mmss.musicco.dao.PlaylistTrackDao;
 import mmss.musicco.dataobjects.Album;
 import mmss.musicco.dataobjects.Artist;
 import mmss.musicco.dataobjects.Track;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import rx.subjects.BehaviorSubject;
-import rx.subjects.PublishSubject;
-import rx.subjects.ReplaySubject;
 
 /**
  * Created by User on 12.10.2016.
  */
 
 public class TracksRepo {
+    private DaoSession mDaoSession;
+
+    public TracksRepo(DaoSession daoSession) {
+        mDaoSession = daoSession;
+    }
+
     public Observable<Track> getAllTracks() {
         if (!isExternalStorageReadable()) {
             return Observable.empty();
@@ -76,6 +82,18 @@ public class TracksRepo {
                 .filter((t) -> t.album == null && album == null || t.album != null && album != null && t.artist.equals(artist));
     }
 
+    public Observable<Track> getPlaylistTracks(Long playlistId) {
+        PlaylistTrackDao dao = mDaoSession.getPlaylistTrackDao();
+        return dao.queryBuilder()
+                .where(PlaylistTrackDao.Properties.PlaylistId.eq(playlistId))
+                .rx().oneByOne()
+                .map(PlaylistTrack::getUrl)
+                .map(File::new)
+                .filter(File::exists)
+                .map(this::extractTrack)
+                .filter((track) -> track != null);
+    }
+
     public Observable<Artist> getAllArtists() {
         return getAllTracks()
                 .groupBy((t) -> t.artist)
@@ -102,6 +120,27 @@ public class TracksRepo {
                     return obs.reduce(accumulator, (a, t) -> {
                         a.tracksCount++;
                         return a;
+                    });
+                });
+    }
+
+    public Observable<Playlist> getAllPlaylists() {
+        PlaylistTrackDao dao = mDaoSession.getPlaylistTrackDao();
+        return dao.queryBuilder().rx()
+                .oneByOne()
+                .groupBy((pt) -> new PlaylistKey(
+                        pt.getPlaylist().getId(),
+                        pt.getPlaylist().getName()
+                ))
+                .flatMap((obs) -> {
+                    PlaylistKey key = obs.getKey();
+                    Playlist playlist = new Playlist();
+                    playlist.setId(key.id);
+                    playlist.setName(key.name);
+                    playlist.tracksCount = 0;
+                    return obs.reduce(playlist, (pl, pt) -> {
+                        pl.tracksCount++;
+                        return pl;
                     });
                 });
     }
@@ -207,13 +246,41 @@ public class TracksRepo {
             if (artist != null ? !artist.equals(albumKey.artist) : albumKey.artist != null)
                 return false;
             return album != null ? album.equals(albumKey.album) : albumKey.album == null;
-
         }
 
         @Override
         public int hashCode() {
             int result = artist != null ? artist.hashCode() : 0;
             result = 31 * result + (album != null ? album.hashCode() : 0);
+            return result;
+        }
+    }
+
+    private static class PlaylistKey {
+        Long id;
+        String name;
+
+        public PlaylistKey(Long id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            PlaylistKey that = (PlaylistKey) o;
+
+            if (id != null ? !id.equals(that.id) : that.id != null) return false;
+            return name != null ? name.equals(that.name) : that.name == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (name != null ? name.hashCode() : 0);
             return result;
         }
     }
