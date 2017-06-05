@@ -25,6 +25,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:exported="false"
+            android:name=".ui.activities.AddPlaylistActivity"/>
+
         <service
             android:exported="false"
             android:name=".ui.services.PlayerService"/>

@@ -14,4 +14,8 @@
 
     <string name="fragment_artists_lv_item_tv_tracks_count_label_text">Композиций:</string>
     <string name="foreground_notification_ticker">Musicco</string>
+    <string name="activity_add_playlist_et_name_placeholder">Название плейлиста</string>
+    <string name="activity_add_playlist_btn_create_text">Создать</string>
+    <string name="framgent_playlists_empty_text">Плейлисты отсутствуют</string>
+    <string name="fragment_playlists_error_text">Не удалось загрузить список</string>
 </resources>

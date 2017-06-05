@@ -7,6 +7,7 @@ import mmss.musicco.ui.activities.MainActivity;
 import mmss.musicco.ui.fragments.AlbumsFragment;
 import mmss.musicco.ui.fragments.ArtistsFragment;
 import mmss.musicco.ui.fragments.PlayerFragment;
+import mmss.musicco.ui.fragments.PlaylistsFragment;
 import mmss.musicco.ui.fragments.TracksFragment;
 import mmss.musicco.ui.services.PlayerService;
 
@@ -28,4 +29,6 @@ public interface AppComponent {
     void inject(TracksFragment mainActivity);
 
     void inject(PlayerService playerService);
+
+    void inject(PlaylistsFragment playlistsFragment);
 }

@@ -31,11 +31,12 @@ import butterknife.ButterKnife;
 import mmss.musicco.App;
 import mmss.musicco.R;
 import mmss.musicco.core.MusiccoPlayer;
-import mmss.musicco.dataobjects.Track;
 import mmss.musicco.core.TracksRepo;
+import mmss.musicco.dataobjects.Track;
 import mmss.musicco.ui.customviews.NotOverlappingBottomSheetLayout;
 import mmss.musicco.ui.fragments.AlbumsFragment;
 import mmss.musicco.ui.fragments.ArtistsFragment;
+import mmss.musicco.ui.fragments.PlaylistsFragment;
 import mmss.musicco.ui.fragments.TracksFragment;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
@@ -159,6 +160,9 @@ public class MainActivity extends AppCompatActivity implements
             FragmentManager fm = getFragmentManager();
             fm.beginTransaction().replace(R.id.content_main_container, f).commit();
         } else if (id == R.id.nav_play_lists) {
+            Fragment f = PlaylistsFragment.create(this);
+            FragmentManager fm = getFragmentManager();
+            fm.beginTransaction().replace(R.id.content_main_container, f).commit();
         } else if (id == R.id.nav_current_track_list) {
             Fragment f = TracksFragment.create(Observable.just(musiccoPlayer.getTracks()));
             FragmentManager fm = getFragmentManager();
@@ -184,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_main_container, f).commit();
     }
-
 
     @Override
     public void onLayoutChange(View v, int l, int t, int r, int b, int ol, int ot, int or, int ob) {

@@ -25,7 +25,6 @@ import mmss.musicco.dataobjects.Album;
 import mmss.musicco.dataobjects.Artist;
 import mmss.musicco.dataobjects.Track;
 import rx.Observable;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
