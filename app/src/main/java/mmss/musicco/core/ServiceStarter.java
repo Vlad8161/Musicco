@@ -17,9 +17,6 @@ public class ServiceStarter {
     public ServiceStarter(Context context, MusiccoPlayer musiccoPlayer) {
         this.mContext = context;
         this.mPlayer = musiccoPlayer;
-        mPlayer.getStateObservable().subscribe((state) -> {
-            Log.d("LOGI", "state changed");
-            mContext.startService(new Intent(mContext, PlayerService.class));
-        });
+        mPlayer.getStateObservable().subscribe(state -> mContext.startService(new Intent(mContext, PlayerService.class)));
     }
 }

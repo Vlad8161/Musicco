@@ -4,6 +4,9 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +33,12 @@ import rx.schedulers.Schedulers;
  * Created by vlad on 6/5/17.
  */
 
-public class PlaylistsFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class PlaylistsFragment extends Fragment {
     @Inject
     public TracksRepo mRepo;
 
     @BindView(R.id.fragment_playlists_list_view)
-    public ListView mLvPlaylists;
+    public RecyclerView mLvPlaylists;
 
     @BindView(R.id.fragment_playlists_progress)
     public View mPbProgress;
@@ -45,6 +48,7 @@ public class PlaylistsFragment extends Fragment implements AdapterView.OnItemCli
 
     private PlaylistsAdapter mAdapter;
     private Subscription mSubscription;
+    private Subscription mClickSubscription;
     private OnShowTracksListener mShowTracksListener;
 
     public static PlaylistsFragment create(OnShowTracksListener listener) {
@@ -60,8 +64,8 @@ public class PlaylistsFragment extends Fragment implements AdapterView.OnItemCli
         ButterKnife.bind(this, root);
         App.getApp().inject(this);
         mAdapter = new PlaylistsAdapter(getActivity());
+        mLvPlaylists.setLayoutManager(new LinearLayoutManager(getActivity()));
         mLvPlaylists.setAdapter(mAdapter);
-        mLvPlaylists.setOnItemClickListener(this);
         return root;
     }
 
@@ -69,12 +73,14 @@ public class PlaylistsFragment extends Fragment implements AdapterView.OnItemCli
     public void onStart() {
         super.onStart();
         startLoading();
+        mClickSubscription = mAdapter.onItemClickObservable().subscribe(this::onItemClick);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         cancelLoading();
+        mClickSubscription.unsubscribe();
     }
 
     @OnClick(R.id.fragment_playlists_btn_add_playlist)
@@ -83,13 +89,15 @@ public class PlaylistsFragment extends Fragment implements AdapterView.OnItemCli
         getActivity().startActivity(intent);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(int i) {
         if (mShowTracksListener == null) {
             return;
         }
 
-        mShowTracksListener.onShowTracks(mRepo.getPlaylistTracks(id).toList());
+        if (i >= 0 && i < mAdapter.getData().size()) {
+            long id = mAdapter.getData().get(i).getId();
+            mShowTracksListener.onShowTracks(mRepo.getPlaylistTracks(id).toList());
+        }
     }
 
     private void startLoading() {

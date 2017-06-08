@@ -19,6 +19,7 @@ import java.util.List;
 
 import mmss.musicco.dao.DaoSession;
 import mmss.musicco.dao.Playlist;
+import mmss.musicco.dao.PlaylistDao;
 import mmss.musicco.dao.PlaylistTrack;
 import mmss.musicco.dao.PlaylistTrackDao;
 import mmss.musicco.dataobjects.Album;
@@ -124,24 +125,22 @@ public class TracksRepo {
     }
 
     public Observable<Playlist> getAllPlaylists() {
-        PlaylistTrackDao dao = mDaoSession.getPlaylistTrackDao();
+        PlaylistDao dao = mDaoSession.getPlaylistDao();
         return dao.queryBuilder().rx()
                 .oneByOne()
-                .groupBy((pt) -> new PlaylistKey(
-                        pt.getPlaylist().getId(),
-                        pt.getPlaylist().getName()
-                ))
-                .flatMap((obs) -> {
-                    PlaylistKey key = obs.getKey();
-                    Playlist playlist = new Playlist();
-                    playlist.setId(key.id);
-                    playlist.setName(key.name);
-                    playlist.tracksCount = 0;
-                    return obs.reduce(playlist, (pl, pt) -> {
-                        pl.tracksCount++;
-                        return pl;
-                    });
-                });
+                .doOnNext(playlist -> playlist.tracksCount = playlist.getTracks().size());
+    }
+
+    public void newPlaylist(String name) {
+        Playlist playlist = new Playlist();
+        playlist.setId(null);
+        playlist.setName(name);
+        mDaoSession.getPlaylistDao().insert(playlist);
+    }
+
+    public void addTrackToPlaylist(Long playlistId, String trackUrl) {
+
+
     }
 
     /* Checks if external storage is available for read and write */

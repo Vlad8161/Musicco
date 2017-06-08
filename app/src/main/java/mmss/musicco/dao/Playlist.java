@@ -9,6 +9,7 @@ import org.greenrobot.greendao.annotation.ToMany;
 import java.util.List;
 import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Transient;
+import org.greenrobot.greendao.annotation.Unique;
 
 /**
  * Created by vlad on 6/5/17.
@@ -19,6 +20,7 @@ public class Playlist {
     @Id
     private Long id;
     @NotNull
+    @Unique
     private String name;
     @ToMany(referencedJoinProperty = "playlistId")
     private List<PlaylistTrack> tracks;
