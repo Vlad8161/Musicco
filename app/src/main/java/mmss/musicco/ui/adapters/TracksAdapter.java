@@ -90,11 +90,9 @@ public class TracksAdapter extends BaseAdapter implements View.OnClickListener {
             holder.tvArtist = (TextView) convertView.findViewById(R.id.fragment_tracks_lv_item_tv_artist);
             holder.tvName = (TextView) convertView.findViewById(R.id.fragment_tracks_lv_item_tv_name);
             holder.ivPlayState = (ImageView) convertView.findViewById(R.id.fragment_tracks_lv_item_image_view);
-            holder.btnAddToPlaylist = (ImageButton) convertView.findViewById(R.id.fragment_tracks_lv_item_btn_add_to_playlist);
+            holder.btnAddToPlaylist = (ImageView) convertView.findViewById(R.id.fragment_tracks_lv_item_btn_add_to_playlist);
             holder.btnAddToPlaylist.setOnClickListener(this);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+            convertView.setTag(holder); } else { holder = (ViewHolder) convertView.getTag();
         }
 
         Track track = tracks.get(position);
@@ -131,7 +129,7 @@ public class TracksAdapter extends BaseAdapter implements View.OnClickListener {
         TextView tvArtist;
         TextView tvName;
         ImageView ivPlayState;
-        ImageButton btnAddToPlaylist;
+        ImageView btnAddToPlaylist;
         Track track;
     }
 

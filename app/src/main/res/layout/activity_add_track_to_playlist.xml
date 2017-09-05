@@ -21,6 +21,7 @@
 
     <FrameLayout
         android:id="@+id/activity_add_track_to_playlist_container"
+        android:layout_below="@id/activity_add_track_to_playlist_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -29,6 +29,10 @@
             android:exported="false"
             android:name=".ui.activities.AddPlaylistActivity"/>
 
+        <activity
+            android:exported="false"
+            android:name=".ui.activities.AddTrackToPlaylistActivity"/>
+
         <service
             android:exported="false"
             android:name=".ui.services.PlayerService"/>
