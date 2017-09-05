@@ -1,15 +1,15 @@
 package mmss.musicco.dao;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.ToMany;
-
-import java.util.List;
-import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.annotation.Unique;
+
+import java.util.List;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.DaoException;
 
 /**
  * Created by vlad on 6/5/17.
@@ -17,6 +17,8 @@ import org.greenrobot.greendao.annotation.Unique;
 
 @Entity
 public class Playlist {
+    @Transient
+    public int tracksCount;
     @Id
     private Long id;
     @NotNull
@@ -24,8 +26,6 @@ public class Playlist {
     private String name;
     @ToMany(referencedJoinProperty = "playlistId")
     private List<PlaylistTrack> tracks;
-    @Transient
-    public int tracksCount;
     /** Used to resolve relations */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;

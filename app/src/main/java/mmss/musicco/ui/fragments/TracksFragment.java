@@ -1,6 +1,7 @@
 package mmss.musicco.ui.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -21,6 +22,7 @@ import mmss.musicco.App;
 import mmss.musicco.R;
 import mmss.musicco.core.MusiccoPlayer;
 import mmss.musicco.dataobjects.Track;
+import mmss.musicco.ui.activities.AddTrackToPlaylistActivity;
 import mmss.musicco.ui.adapters.TracksAdapter;
 import rx.Observable;
 import rx.Subscription;
@@ -31,8 +33,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by User on 12.10.2016.
  */
 
-public class TracksFragment extends Fragment implements AdapterView.OnItemClickListener {
-
+public class TracksFragment extends Fragment implements AdapterView.OnItemClickListener, TracksAdapter.OnAddToPlaylistListener {
     @Inject
     public MusiccoPlayer musiccoPlayer;
 
@@ -68,6 +69,7 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
         ButterKnife.bind(this, v);
         App.getApp().inject(this);
         adapter = new TracksAdapter(getActivity().getApplicationContext(), musiccoPlayer);
+        adapter.setOnAddToPlaylistListener(this);
         lvTracks.setAdapter(adapter);
         lvTracks.setOnItemClickListener(this);
         mSubscription.add(musiccoPlayer.getTrackObservable().subscribe(this::onTrackChanged));
@@ -79,6 +81,7 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
     public void onDestroyView() {
         super.onDestroyView();
         mSubscription.unsubscribe();
+        adapter.setOnAddToPlaylistListener(null);
     }
 
     @Override
@@ -150,5 +153,12 @@ public class TracksFragment extends Fragment implements AdapterView.OnItemClickL
 
     public void onStateChanged(int state) {
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onAddToPlaylist(String trackUrl) {
+        Intent intent = new Intent(getActivity(), AddTrackToPlaylistActivity.class);
+        intent.putExtra(AddTrackToPlaylistActivity.TRACK_URL_KEY, trackUrl);
+        getActivity().startActivity(intent);
     }
 }

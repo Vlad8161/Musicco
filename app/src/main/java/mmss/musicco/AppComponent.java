@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import mmss.musicco.ui.activities.AddPlaylistActivity;
+import mmss.musicco.ui.activities.AddTrackToPlaylistActivity;
 import mmss.musicco.ui.activities.MainActivity;
 import mmss.musicco.ui.fragments.AlbumsFragment;
 import mmss.musicco.ui.fragments.ArtistsFragment;
@@ -34,4 +35,6 @@ public interface AppComponent {
     void inject(PlaylistsFragment playlistsFragment);
 
     void inject(AddPlaylistActivity addPlaylistActivity);
+
+    void inject(AddTrackToPlaylistActivity addTrackToPlaylistActivity);
 }

@@ -6,12 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import javax.inject.Inject;
@@ -23,7 +20,7 @@ import mmss.musicco.App;
 import mmss.musicco.R;
 import mmss.musicco.core.TracksRepo;
 import mmss.musicco.ui.activities.AddPlaylistActivity;
-import mmss.musicco.ui.activities.OnShowTracksListener;
+import mmss.musicco.ui.activities.OnPlaylistSelectedListener;
 import mmss.musicco.ui.adapters.PlaylistsAdapter;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -49,11 +46,11 @@ public class PlaylistsFragment extends Fragment {
     private PlaylistsAdapter mAdapter;
     private Subscription mSubscription;
     private Subscription mClickSubscription;
-    private OnShowTracksListener mShowTracksListener;
+    private OnPlaylistSelectedListener onPlaylistSelectedListener;
 
-    public static PlaylistsFragment create(OnShowTracksListener listener) {
+    public static PlaylistsFragment create(OnPlaylistSelectedListener listener) {
         PlaylistsFragment f = new PlaylistsFragment();
-        f.mShowTracksListener = listener;
+        f.onPlaylistSelectedListener = listener;
         return f;
     }
 
@@ -90,13 +87,13 @@ public class PlaylistsFragment extends Fragment {
     }
 
     public void onItemClick(int i) {
-        if (mShowTracksListener == null) {
+        if (onPlaylistSelectedListener == null) {
             return;
         }
 
         if (i >= 0 && i < mAdapter.getData().size()) {
             long id = mAdapter.getData().get(i).getId();
-            mShowTracksListener.onShowTracks(mRepo.getPlaylistTracks(id).toList());
+            onPlaylistSelectedListener.onPlaylistSelected(id);
         }
     }
 

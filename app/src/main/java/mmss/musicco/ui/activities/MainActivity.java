@@ -44,7 +44,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        OnShowTracksListener, View.OnLayoutChangeListener {
+        View.OnLayoutChangeListener, OnAlbumSelectedListener, OnArtistSelectedListener, OnPlaylistSelectedListener {
     private static final String TAG = "MainActivity";
     private static final int PERMISSION_REQUEST_CODE = 10;
 
@@ -183,13 +183,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onShowTracks(Observable<List<Track>> tracksObservable) {
-        Fragment f = TracksFragment.create(tracksObservable);
-        FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().replace(R.id.content_main_container, f).commit();
-    }
-
-    @Override
     public void onLayoutChange(View v, int l, int t, int r, int b, int ol, int ot, int or, int ob) {
         if (v == bottomSheetView) {
             int newDraggerHeight = dragger.getMeasuredHeight();
@@ -225,6 +218,27 @@ public class MainActivity extends AppCompatActivity implements
                         .commit();
             }
         }
+    }
+
+    @Override
+    public void onAlbumSelected(String artist, String album) {
+        Fragment f = TracksFragment.create(tracksRepo.getAlbumTracks(artist, album).toList());
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.content_main_container, f).commit();
+    }
+
+    @Override
+    public void onArtistSelected(String artist) {
+        Fragment f = TracksFragment.create(tracksRepo.getArtistTracks(artist).toList());
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.content_main_container, f).commit();
+    }
+
+    @Override
+    public void onPlaylistSelected(Long playlistId) {
+        Fragment f = TracksFragment.create(tracksRepo.getPlaylistTracks(playlistId).toList());
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.content_main_container, f).commit();
     }
 
     public static class BottomSheetHelper extends Fragment implements View.OnTouchListener, ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {

@@ -20,7 +20,7 @@ import mmss.musicco.App;
 import mmss.musicco.R;
 import mmss.musicco.dataobjects.Artist;
 import mmss.musicco.core.TracksRepo;
-import mmss.musicco.ui.activities.OnShowTracksListener;
+import mmss.musicco.ui.activities.OnArtistSelectedListener;
 import mmss.musicco.ui.adapters.ArtistsAdapter;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -45,15 +45,15 @@ public class ArtistsFragment extends Fragment implements AdapterView.OnItemClick
 
     private ArtistsAdapter adapter;
     private Subscription subscription;
-    private OnShowTracksListener showTracksListener;
+    private OnArtistSelectedListener onArtistSelectedListener;
 
     public ArtistsFragment() {
         App.getApp().inject(this);
     }
 
-    public static ArtistsFragment create(OnShowTracksListener listener) {
+    public static ArtistsFragment create(OnArtistSelectedListener listener) {
         ArtistsFragment f = new ArtistsFragment();
-        f.showTracksListener = listener;
+        f.onArtistSelectedListener = listener;
         return f;
     }
 
@@ -83,13 +83,13 @@ public class ArtistsFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if (showTracksListener == null) {
+        if (onArtistSelectedListener == null) {
             return;
         }
 
         Artist artist = (Artist) adapter.getItem(i);
         if (artist != null) {
-            showTracksListener.onShowTracks(tracksRepo.getArtistTracks(artist.name).toList());
+            onArtistSelectedListener.onArtistSelected(artist.name);
         }
     }
 
